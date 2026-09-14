@@ -1,0 +1,389 @@
+﻿@model IEnumerable<ECommerce.Domain.Entities.Order>
+
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<div class="admin-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>📦 Manage Orders</h2>
+
+            <p>
+                View and update customer orders.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="gold-button">
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-box">
+
+            No orders found in the store yet.
+
+        </div>
+    }
+    else
+    {
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Order ID</th>
+
+                            <th>Date</th>
+
+                            <th>Customer</th>
+
+                            <th>Total</th>
+
+                            <th>Status</th>
+
+                            <th>Change Status</th>
+
+                            <th>Details</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        #@order.Id
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @order.OrderDate.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+
+
+                                <td>
+                                    @(order.Customer != null
+                                        ? order.Customer.UserName
+                                        : "N/A")
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        @order.TotalPrice.ToString("C")
+                                    </strong>
+                                </td>
+
+
+                                <td>
+
+                                    @if (order.Status ==
+                                         ECommerce.Domain.Entities.OrderStatus.Pending)
+                                    {
+                                        <span class="order-status pending">
+                                            Pending
+                                        </span>
+                                    }
+                                    else if (order.Status ==
+                                             ECommerce.Domain.Entities.OrderStatus.Shipped)
+                                    {
+                                        <span class="order-status shipped">
+                                            Shipped
+                                        </span>
+                                    }
+                                    else if (order.Status ==
+                                             ECommerce.Domain.Entities.OrderStatus.Delivered)
+                                    {
+                                        <span class="order-status delivered">
+                                            Delivered
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="order-status cancelled">
+                                            Cancelled
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <form asp-action="UpdateOrderStatus"
+                                          method="post"
+                                          class="status-form">
+
+                                        <input type="hidden"
+                                               name="orderId"
+                                               value="@order.Id" />
+
+
+                                        <select name="status"
+                                                class="status-select">
+
+                                            @if (order.Status ==
+                                                 ECommerce.Domain.Entities.OrderStatus.Pending)
+                                            {
+                                                <option value="Pending" selected>
+                                                    Pending
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Pending">
+                                                    Pending
+                                                </option>
+                                            }
+
+
+                                            @if (order.Status ==
+                                                 ECommerce.Domain.Entities.OrderStatus.Shipped)
+                                            {
+                                                <option value="Shipped" selected>
+                                                    Shipped
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Shipped">
+                                                    Shipped
+                                                </option>
+                                            }
+
+
+                                            @if (order.Status ==
+                                                 ECommerce.Domain.Entities.OrderStatus.Delivered)
+                                            {
+                                                <option value="Delivered" selected>
+                                                    Delivered
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Delivered">
+                                                    Delivered
+                                                </option>
+                                            }
+
+
+                                            @if (order.Status ==
+                                                 ECommerce.Domain.Entities.OrderStatus.Cancelled)
+                                            {
+                                                <option value="Cancelled" selected>
+                                                    Cancelled
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Cancelled">
+                                                    Cancelled
+                                                </option>
+                                            }
+
+                                        </select>
+
+
+                                        <button type="submit"
+                                                class="update-button">
+
+                                            Update
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+
+                                <td>
+
+                                    <a asp-controller="Admin"
+                                       asp-action="OrderDetails"
+                                       asp-route-id="@order.Id"
+                                       class="details-button">
+
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+<style>
+
+    .admin-page {
+        padding: 30px 0;
+    }
+
+    .page-header {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #D4AF37;
+    }
+
+        .page-header h2 {
+            color: #D4AF37;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 5px 0 0;
+            color: #ccc;
+        }
+
+    .gold-button {
+        background: #D4AF37;
+        color: #000;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background: #000;
+            color: #D4AF37;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .admin-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+    .order-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .shipped {
+        background: #e7f1ff;
+        color: #0d6efd;
+    }
+
+    .delivered {
+        background: #e8f7ed;
+        color: #198754;
+    }
+
+    .cancelled {
+        background: #fde8e8;
+        color: #dc3545;
+    }
+
+    .status-form {
+        display: flex;
+        gap: 6px;
+    }
+
+    .status-select {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 6px;
+    }
+
+    .update-button {
+        border: none;
+        background: #000;
+        color: #D4AF37;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .update-button:hover {
+            background: #D4AF37;
+            color: #000;
+        }
+
+    .details-button {
+        display: inline-block;
+        background: #D4AF37;
+        color: #000;
+        text-decoration: none;
+        padding: 7px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+        .details-button:hover {
+            background: #000;
+            color: #D4AF37;
+        }
+
+    .empty-box {
+        padding: 30px;
+        background: #f8f8f8;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+</style>

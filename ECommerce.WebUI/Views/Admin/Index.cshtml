@@ -1,0 +1,444 @@
+﻿@model ECommerce.WebUI.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+
+<div class="admin-dashboard">
+
+
+    <!-- Header -->
+
+    <div class="admin-header">
+
+        <div>
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p>
+                Manage your Marketly store from one place.
+            </p>
+
+        </div>
+
+        <div class="admin-icon">
+            ⚙️
+        </div>
+
+    </div>
+
+
+
+    <!-- Statistics -->
+
+    <div class="row g-4">
+
+
+        <!-- Customers -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    👥
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Customers
+                    </span>
+
+                    <h2>
+                        @Model.TotalCustomers
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Sellers -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    🏪
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Sellers
+                    </span>
+
+                    <h2>
+                        @Model.TotalSellers
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Products -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    📦
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Products
+                    </span>
+
+                    <h2>
+                        @Model.TotalProducts
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Orders -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    🛒
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Orders
+                    </span>
+
+                    <h2>
+                        @Model.TotalOrders
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Revenue -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Revenue
+                    </span>
+
+                    <h2>
+                        @Model.TotalRevenue.ToString("C")
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Pending -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="admin-card">
+
+                <div class="admin-card-icon">
+                    ⏳
+                </div>
+
+                <div>
+
+                    <span>
+                        Pending Orders
+                    </span>
+
+                    <h2>
+                        @Model.PendingOrdersCount
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Quick Actions -->
+
+    <div class="quick-actions mt-5">
+
+        <h3>
+            Quick Actions
+        </h3>
+
+
+        <div class="row g-3">
+
+
+            <div class="col-md-6">
+
+                <a asp-controller="Admin"
+                   asp-action="Users"
+                   class="admin-action">
+
+                    👥
+                    <span>
+                        Manage Users
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <a asp-controller="Admin"
+                   asp-action="SellerRequests"
+                   class="admin-action">
+
+                    🔔
+                    <span>
+                        Seller Requests
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <a asp-controller="Admin"
+                   asp-action="ManageOrders"
+                   class="admin-action">
+
+                    📦
+                    <span>
+                        Manage Orders
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <a asp-controller="Admin"
+                   asp-action="Products"
+                   class="admin-action">
+
+                    🛍️
+                    <span>
+                        Manage Products
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <a asp-controller="Category"
+                   asp-action="Index"
+                   class="admin-action">
+
+                    📂
+                    <span>
+                        Manage Categories
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<style>
+
+    .admin-dashboard {
+        padding: 30px 0;
+    }
+
+
+    .admin-header {
+        background: #000000;
+        color: white;
+        border-radius: 18px;
+        padding: 30px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px solid #D4AF37;
+    }
+
+
+        .admin-header h1 {
+            color: #D4AF37;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+
+        .admin-header p {
+            margin: 0;
+            color: #dddddd;
+        }
+
+
+    .admin-icon {
+        font-size: 45px;
+    }
+
+
+    .admin-card {
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        border-left: 5px solid #D4AF37;
+        border-radius: 15px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: 0.2s;
+    }
+
+
+        .admin-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+
+    .admin-card-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        background: #000000;
+        color: #D4AF37;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+
+    .admin-card span {
+        color: #777777;
+        font-size: 14px;
+    }
+
+
+    .admin-card h2 {
+        margin: 5px 0 0;
+        font-weight: 700;
+        color: #000000;
+    }
+
+
+    .quick-actions h3 {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+
+    .admin-action {
+        min-height: 70px;
+        padding: 18px 20px;
+        background: #000000;
+        color: #D4AF37;
+        border-radius: 12px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 18px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+
+        .admin-action:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: translateY(-2px);
+        }
+
+
+    @@media (max-width: 576px) {
+
+        .admin-dashboard {
+            padding: 15px 0;
+        }
+
+
+        .admin-header {
+            padding: 22px;
+        }
+
+
+            .admin-header h1 {
+                font-size: 25px;
+            }
+
+
+        .admin-icon {
+            font-size: 32px;
+        }
+    }
+
+</style>

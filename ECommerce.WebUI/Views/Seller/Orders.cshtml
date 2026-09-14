@@ -1,0 +1,316 @@
+﻿@model IEnumerable<ECommerce.Domain.Entities.Order>
+
+@{
+    ViewData["Title"] = "Seller Orders";
+}
+
+<div class="container py-5">
+
+    <div class="seller-header">
+
+        <div>
+
+            <span>
+                SELLER CENTER
+            </span>
+
+            <h1>
+                My Orders
+            </h1>
+
+            <p>
+                View orders containing your products and update their status.
+            </p>
+
+        </div>
+
+
+        <a asp-action="Index"
+           class="back-button">
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-box">
+
+            <div>
+                📦
+            </div>
+
+            <h3>
+                No Orders Yet
+            </h3>
+
+            <p>
+                There are no orders containing your products.
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <div class="orders-card">
+
+            <div class="table-responsive">
+
+                <table class="orders-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Update
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        #@order.Id
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @order.OrderDate.ToString(
+                                        "dd/MM/yyyy"
+                                    )
+                                </td>
+
+
+                                <td>
+                                    @(order.Customer?.UserName ?? "N/A")
+                                </td>
+
+
+                                <td>
+                                    @order.TotalPrice.ToString("C")
+                                </td>
+
+
+                                <td>
+
+                                    <span class="status">
+                                        @order.Status
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <form asp-action="UpdateOrderStatus"
+                                          method="post"
+                                          class="status-form">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="orderId"
+                                               value="@order.Id" />
+
+
+                                        <select name="status"
+                                                class="status-select">
+
+                                            <option value="Pending"
+                                                    selected="@(order.Status == ECommerce.Domain.Entities.OrderStatus.Pending)">
+                                                Pending
+                                            </option>
+
+                                            <option value="Confirmed"
+                                                    selected="@(order.Status == ECommerce.Domain.Entities.OrderStatus.Confirmed)">
+                                                Confirmed
+                                            </option>
+
+                                            <option value="Shipped"
+                                                    selected="@(order.Status == ECommerce.Domain.Entities.OrderStatus.Shipped)">
+                                                Shipped
+                                            </option>
+
+                                            <option value="Delivered"
+                                                    selected="@(order.Status == ECommerce.Domain.Entities.OrderStatus.Delivered)">
+                                                Delivered
+                                            </option>
+
+                                            <option value="Cancelled"
+                                                    selected="@(order.Status == ECommerce.Domain.Entities.OrderStatus.Cancelled)">
+                                                Cancelled
+                                            </option>
+
+                                        </select>
+
+
+                                        <button type="submit"
+                                                class="update-button">
+
+                                            Update
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+<style>
+
+    .seller-header {
+        background: #000;
+        color: white;
+        padding: 28px;
+        border-radius: 16px;
+        border-bottom: 3px solid #d4af37;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .seller-header span {
+            color: #d4af37;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .seller-header h1 {
+            margin: 7px 0;
+        }
+
+        .seller-header p {
+            color: #ccc;
+            margin: 0;
+        }
+
+    .back-button {
+        background: #d4af37;
+        color: #000;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .orders-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .orders-table th {
+            background: #000;
+            color: #d4af37;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+    .status {
+        background: #fff3cd;
+        color: #856404;
+        padding: 6px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-form {
+        display: flex;
+        gap: 6px;
+    }
+
+    .status-select {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 6px;
+    }
+
+    .update-button {
+        border: none;
+        background: #000;
+        color: #d4af37;
+        padding: 7px 12px;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .update-button:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+    .empty-box {
+        text-align: center;
+        padding: 70px 20px;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+    }
+
+        .empty-box div {
+            font-size: 4rem;
+        }
+
+</style>

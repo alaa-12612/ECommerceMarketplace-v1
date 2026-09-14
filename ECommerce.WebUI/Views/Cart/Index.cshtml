@@ -1,0 +1,287 @@
+﻿@model ECommerce.Domain.Entities.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+
+    decimal total = 0;
+
+    if (Model?.Items != null)
+    {
+        total = Model.Items.Sum(
+            item => (item.Product?.Price ?? 0) * item.Quantity
+        );
+    }
+}
+
+<div class="container py-5">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="bi bi-cart3 me-2"></i>
+            Shopping Cart
+        </h2>
+
+        <p class="text-muted mb-0">
+            Review the items in your shopping cart.
+        </p>
+    </div>
+
+
+    @if (Model == null || Model.Items == null || !Model.Items.Any())
+    {
+        <!-- Empty Cart -->
+
+        <div class="text-center py-5">
+
+            <i class="bi bi-cart-x text-muted"
+               style="font-size: 5rem;"></i>
+
+            <h3 class="fw-bold mt-3">
+                Your cart is empty
+            </h3>
+
+            <p class="text-muted">
+                You have no products in your shopping cart.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary mt-2">
+
+                <i class="bi bi-shop me-1"></i>
+                Continue Shopping
+
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            <!-- Cart Items -->
+            <div class="col-lg-8">
+
+                @foreach (var item in Model.Items)
+                {
+                    /*
+                     * ImageUrl can be:
+                     *
+                     * External URL:
+                     * https://images.unsplash.com/...
+                     *
+                     * OR local file name:
+                     * 7555be75-....jpg
+                     */
+
+                    var imageUrl = item.Product?.ImageUrl;
+
+                    var imageSrc =
+                        !string.IsNullOrWhiteSpace(imageUrl)
+                        ? (
+                            imageUrl.StartsWith(
+                                "http://",
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                            ||
+                            imageUrl.StartsWith(
+                                "https://",
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                                ? imageUrl
+                                : Url.Content(
+                                    "~/images/products/" + imageUrl
+                                )
+                          )
+                        : null;
+
+
+                    <div class="card border-0 shadow-sm mb-3">
+
+                        <div class="card-body">
+
+                            <div class="row align-items-center g-3">
+
+
+                                <!-- Product Image -->
+                                <div class="col-4 col-md-2">
+
+                                    @if (!string.IsNullOrWhiteSpace(imageSrc))
+                                    {
+                                        <img src="@imageSrc"
+                                             alt="@item.Product?.Name"
+                                             class="img-fluid rounded"
+                                             style="
+                                        width:100px;
+                                        height:100px;
+                                        object-fit:cover;
+                                        " />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded
+                                            d-flex
+                                            align-items-center
+                                            justify-content-center"
+                                             style="
+                                            width:100px;
+                                            height:100px;
+                                            ">
+
+                                            <i class="bi bi-image
+                                            text-muted fs-3"></i>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <!-- Product Information -->
+                                <div class="col-8 col-md-4">
+
+                                    <h5 class="fw-bold mb-1">
+                                        @(item.Product?.Name ?? "Product")
+                                    </h5>
+
+                                    <p class="text-muted small mb-0">
+                                        @(item.Product?.Description ?? "")
+                                    </p>
+
+                                </div>
+
+
+                                <!-- Price -->
+                                <div class="col-6 col-md-2">
+
+                                    <span class="fw-semibold">
+                                        @((item.Product?.Price ?? 0).ToString("C"))
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Quantity -->
+                                <div class="col-6 col-md-2">
+
+                                    <form asp-controller="Cart"
+                                          asp-action="UpdateQuantity"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="cartItemId"
+                                               value="@item.Id" />
+
+                                        <input type="number"
+                                               name="quantity"
+                                               value="@item.Quantity"
+                                               min="1"
+                                               class="form-control"
+                                               onchange="this.form.submit();" />
+
+                                    </form>
+
+                                </div>
+
+
+                                <!-- Remove Button -->
+                                <div class="col-12 col-md-2 text-md-end">
+
+                                    <form asp-controller="Cart"
+                                          asp-action="RemoveFromCart"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="cartItemId"
+                                               value="@item.Id" />
+
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm">
+
+                                            <i class="bi bi-trash me-1"></i>
+                                            Remove
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <h4 class="fw-bold mb-4">
+                            Order Summary
+                        </h4>
+
+
+                        <!-- Subtotal -->
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span class="text-muted">
+                                Subtotal
+                            </span>
+
+                            <span class="fw-semibold">
+                                @total.ToString("C")
+                            </span>
+
+                        </div>
+
+
+                        <hr />
+
+
+                        <!-- Total -->
+                        <div class="d-flex justify-content-between mb-4">
+
+                            <span class="fw-bold">
+                                Total
+                            </span>
+
+                            <span class="fw-bold fs-4">
+                                @total.ToString("C")
+                            </span>
+
+                        </div>
+
+
+                        <!-- Checkout -->
+                        <a asp-controller="Order"
+                           asp-action="Checkout"
+                           class="btn btn-primary btn-lg w-100">
+
+                            <i class="bi bi-credit-card me-2"></i>
+                            Proceed to Checkout
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

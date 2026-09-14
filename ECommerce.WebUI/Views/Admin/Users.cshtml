@@ -1,0 +1,263 @@
+﻿@model IEnumerable<ECommerce.Domain.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="admin-page">
+
+    <div class="page-header">
+        <div>
+            <h2>👥 User Management</h2>
+            <p>Manage all registered users.</p>
+        </div>
+
+        <a asp-action="Index" class="gold-button">
+            ← Dashboard
+        </a>
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-box">
+            No users found.
+        </div>
+    }
+    else
+    {
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var user in Model)
+                        {
+                            bool isLocked =
+                                user.LockoutEnd.HasValue &&
+                                user.LockoutEnd.Value > DateTimeOffset.UtcNow;
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @user.FullName
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @user.Email
+                                </td>
+
+                                <td>
+
+                                    @if (isLocked)
+                                    {
+                                        <span class="status suspended">
+                                            Suspended
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status active">
+                                            Active
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    @if (isLocked)
+                                    {
+                                        <form asp-action="ActivateUser"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="userId"
+                                                   value="@user.Id" />
+
+                                            <button type="submit"
+                                                    class="action-button activate">
+
+                                                Activate
+
+                                            </button>
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="SuspendUser"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="userId"
+                                                   value="@user.Id" />
+
+                                            <button type="submit"
+                                                    class="action-button suspend">
+
+                                                Suspend
+
+                                            </button>
+
+                                        </form>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+<style>
+
+    .admin-page {
+        padding: 30px 0;
+    }
+
+    .page-header {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #D4AF37;
+    }
+
+        .page-header h2 {
+            color: #D4AF37;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 5px 0 0;
+            color: #ccc;
+        }
+
+    .gold-button {
+        background: #D4AF37;
+        color: #000;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .gold-button:hover {
+            background: #fff;
+            color: #000;
+        }
+
+    .table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background: #000;
+            color: #D4AF37;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .admin-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .admin-table tr:hover {
+            background: #fafafa;
+        }
+
+    .status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+        .status.active {
+            background: #e8f7ed;
+            color: #198754;
+        }
+
+        .status.suspended {
+            background: #fde8e8;
+            color: #dc3545;
+        }
+
+    .action-button {
+        border: none;
+        padding: 7px 14px;
+        border-radius: 7px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .action-button.activate {
+            background: #000;
+            color: #D4AF37;
+        }
+
+            .action-button.activate:hover {
+                background: #D4AF37;
+                color: #000;
+            }
+
+        .action-button.suspend {
+            background: #D4AF37;
+            color: #000;
+        }
+
+            .action-button.suspend:hover {
+                background: #000;
+                color: #D4AF37;
+            }
+
+    .empty-box {
+        padding: 30px;
+        background: #f8f8f8;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+</style>

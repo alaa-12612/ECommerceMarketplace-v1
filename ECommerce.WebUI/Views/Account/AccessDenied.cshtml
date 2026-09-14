@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="access-denied-page">
+
+    <div class="access-denied-card">
+
+        <div class="error-icon">
+            🔒
+        </div>
+
+        <div class="error-code">
+            403
+        </div>
+
+        <h1>Access Denied</h1>
+
+        <p>
+            You do not have permission to access this page.
+        </p>
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="home-button">
+            Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+<style>
+
+    .access-denied-page {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        background: #f6f6f6;
+    }
+
+    .access-denied-card {
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        background: #ffffff;
+        padding: 50px 35px;
+        border-radius: 20px;
+        border: 1px solid #e2e2e2;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .error-icon {
+        font-size: 55px;
+        margin-bottom: 10px;
+    }
+
+    .error-code {
+        color: #d4af37;
+        font-size: 70px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 15px;
+    }
+
+    .access-denied-card h1 {
+        color: #0b0b0b;
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .access-denied-card p {
+        color: #777;
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+
+    .home-button {
+        display: inline-block;
+        padding: 12px 30px;
+        border-radius: 10px;
+        background: #0b0b0b;
+        color: #d4af37;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .home-button:hover {
+            background: #d4af37;
+            color: #0b0b0b;
+        }
+
+    @@media (max-width: 576px) {
+
+        .access-denied-card {
+            padding: 40px 20px;
+        }
+
+        .error-code {
+            font-size: 55px;
+        }
+
+        .access-denied-card h1 {
+            font-size: 25px;
+        }
+    }
+
+</style>

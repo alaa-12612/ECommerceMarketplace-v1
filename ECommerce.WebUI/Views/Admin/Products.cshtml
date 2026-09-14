@@ -1,0 +1,299 @@
+﻿@model IEnumerable<ECommerce.Domain.Entities.Product>
+
+@{
+    ViewData["Title"] = "Manage Products";
+}
+
+<div class="admin-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>📦 Manage Products</h2>
+
+            <p>
+                Manage all products available in Marketly.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="gold-button">
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-box">
+
+            No products found.
+
+        </div>
+    }
+    else
+    {
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Image</th>
+
+                            <th>Product</th>
+
+                            <th>Category</th>
+
+                            <th>Price</th>
+
+                            <th>Seller</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var product in Model)
+                        {
+
+                            <tr>
+
+                                <!-- Image -->
+
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                    {
+                                        var imageUrl = product.ImageUrl;
+
+                                        var imageSrc =
+                                            imageUrl.StartsWith(
+                                                "http://",
+                                                StringComparison.OrdinalIgnoreCase)
+                                            ||
+                                            imageUrl.StartsWith(
+                                                "https://",
+                                                StringComparison.OrdinalIgnoreCase)
+                                            ? imageUrl
+                                            : Url.Content(
+                                                "~/images/products/" +
+                                                imageUrl);
+
+                                        <img src="@imageSrc"
+                                             alt="@product.Name"
+                                             class="product-image" />
+                                    }
+                                    else
+                                    {
+                                        <div class="no-image">
+                                            No Image
+                                        </div>
+                                    }
+
+                                </td>
+
+
+                                <!-- Product -->
+
+                                <td>
+
+                                    <strong>
+                                        @product.Name
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- Category -->
+
+                                <td>
+
+                                    @(product.Category != null
+                                        ? product.Category.Name
+                                        : "N/A")
+
+                                </td>
+
+
+                                <!-- Price -->
+
+                                <td>
+
+                                    <strong>
+                                        @product.Price.ToString("C")
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- Seller -->
+
+                                <td>
+
+                                    @(product.Seller != null
+                                        ? product.Seller.UserName
+                                        : "N/A")
+
+                                </td>
+
+
+                                <!-- Delete -->
+
+                                <td>
+
+                                    <form asp-action="DeleteProduct"
+                                          asp-route-id="@product.Id"
+                                          method="post"
+                                          onsubmit="return confirm('Are you sure you want to remove this product?');">
+
+                                        <button type="submit"
+                                                class="delete-button">
+
+                                            🗑 Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+<style>
+
+    .admin-page {
+        padding: 30px 0;
+    }
+
+    .page-header {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #D4AF37;
+    }
+
+        .page-header h2 {
+            color: #D4AF37;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 5px 0 0;
+            color: #ccc;
+        }
+
+    .gold-button {
+        background: #D4AF37;
+        color: #000;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .gold-button:hover {
+            background: white;
+        }
+
+    .table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background: #000;
+            color: #D4AF37;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .admin-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+    .product-image {
+        width: 65px;
+        height: 65px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .no-image {
+        width: 65px;
+        height: 65px;
+        background: #f2f2f2;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: #777;
+    }
+
+    .delete-button {
+        border: none;
+        background: #000;
+        color: #D4AF37;
+        padding: 8px 13px;
+        border-radius: 7px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .delete-button:hover {
+            background: #D4AF37;
+            color: #000;
+        }
+
+    .empty-box {
+        padding: 30px;
+        background: #f8f8f8;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+</style>

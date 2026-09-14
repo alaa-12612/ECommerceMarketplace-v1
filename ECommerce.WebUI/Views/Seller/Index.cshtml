@@ -1,0 +1,574 @@
+﻿@model ECommerce.WebUI.ViewModels.SellerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Seller Dashboard";
+}
+
+<div class="container py-5">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+
+        <div>
+            <span class="dashboard-label">
+                SELLER CENTER
+            </span>
+
+            <h1>
+                Seller Dashboard
+            </h1>
+
+            <p>
+                Manage your products and track your sales performance.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+
+        <!-- Total Products -->
+        <div class="col">
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📦
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        MY PRODUCTS
+                    </span>
+
+                    <h2>
+                        @Model.TotalProducts
+                    </h2>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Total Orders -->
+        <div class="col">
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📑
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        MY ORDERS
+                    </span>
+
+                    <h2>
+                        @Model.TotalOrders
+                    </h2>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Items Sold -->
+        <div class="col">
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🛒
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        ITEMS SOLD
+                    </span>
+
+                    <h2>
+                        @Model.TotalItemsSold
+                    </h2>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Revenue -->
+        <div class="col">
+            <div class="stat-card revenue-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div class="stat-content">
+
+                    <span>
+                        TOTAL SALES
+                    </span>
+
+                    <h2>
+                        @Model.TotalRevenue.ToString("C")
+                    </h2>
+
+                    <small>
+                        Delivered orders
+                    </small>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Management Section -->
+    <div class="management-section">
+
+        <div class="section-header">
+
+            <span>
+                QUICK ACTIONS
+            </span>
+
+            <h2>
+                Manage Your Store
+            </h2>
+
+            <p>
+                Access your products, orders, and add new items to your marketplace.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- Manage Products -->
+            <div class="col-md-6">
+
+                <div class="action-card">
+
+                    <div class="action-icon">
+                        📂
+                    </div>
+
+                    <div class="action-content">
+
+                        <h4>
+                            Manage My Products
+                        </h4>
+
+                        <p>
+                            View, manage, and organize all the products
+                            you have added to the marketplace.
+                        </p>
+
+                        <a asp-controller="Product"
+                           asp-action="Index"
+                           class="action-button dark-button">
+
+                            Manage Products
+                            <span>→</span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Add Product -->
+            <div class="col-md-6">
+
+                <div class="action-card add-product-card">
+
+                    <div class="action-icon gold-icon">
+                        ➕
+                    </div>
+
+                    <div class="action-content">
+
+                        <h4>
+                            Add New Product
+                        </h4>
+
+                        <p>
+                            Add a new product to your store and make it
+                            available for customers.
+                        </p>
+
+                        <a asp-controller="Product"
+                           asp-action="Create"
+                           class="action-button gold-button">
+
+                            Add Product
+                            <span>→</span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Manage My Orders -->
+            <div class="col-md-6">
+
+                <div class="action-card orders-card">
+
+                    <div class="action-icon">
+                        📦
+                    </div>
+
+                    <div class="action-content">
+
+                        <h4>
+                            Manage My Orders
+                        </h4>
+
+                        <p>
+                            View orders containing your products
+                            and update their status.
+                        </p>
+
+                        <a asp-controller="Seller"
+                           asp-action="Orders"
+                           class="action-button dark-button">
+
+                            View Orders
+                            <span>→</span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    /* =====================================================
+               DASHBOARD HEADER
+               ===================================================== */
+
+    .dashboard-header {
+        margin-bottom: 40px;
+    }
+
+    .dashboard-label {
+        color: #b8860b;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .dashboard-header h1 {
+        color: #0b0b0b;
+        font-size: 2.6rem;
+        font-weight: 800;
+        margin: 8px 0;
+    }
+
+    .dashboard-header p {
+        color: #777777;
+        margin: 0;
+        font-size: 1rem;
+    }
+
+
+    /* =====================================================
+               STAT CARDS
+               ===================================================== */
+
+    .stat-card {
+        height: 100%;
+        background: #ffffff;
+        border: 1px solid #e2e2e2;
+        border-radius: 18px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+        transition: all 0.25s ease;
+        border-left: 4px solid #d4af37;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+    .stat-icon {
+        width: 62px;
+        height: 62px;
+        flex-shrink: 0;
+        border-radius: 14px;
+        background: #151515;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+    }
+
+    .stat-content {
+        min-width: 0;
+    }
+
+        .stat-content span {
+            display: block;
+            color: #888888;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-content h2 {
+            color: #111111;
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin: 0;
+            word-break: break-word;
+        }
+
+        .stat-content small {
+            display: block;
+            color: #999999;
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+    .revenue-card {
+        background: #151515;
+        border-left-color: #ffd700;
+    }
+
+        .revenue-card .stat-content span {
+            color: #d4af37;
+        }
+
+        .revenue-card .stat-content h2 {
+            color: #ffffff;
+        }
+
+        .revenue-card .stat-content small {
+            color: #999999;
+        }
+
+
+    /* =====================================================
+               MANAGEMENT SECTION
+               ===================================================== */
+
+    .management-section {
+        margin-top: 55px;
+    }
+
+    .section-header {
+        margin-bottom: 25px;
+    }
+
+        .section-header > span {
+            color: #b8860b;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .section-header h2 {
+            color: #111111;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 7px 0;
+        }
+
+        .section-header p {
+            color: #777777;
+            margin: 0;
+        }
+
+
+    /* =====================================================
+               ACTION CARDS
+               ===================================================== */
+
+    .action-card {
+        height: 100%;
+        background: #ffffff;
+        border: 1px solid #e2e2e2;
+        border-radius: 18px;
+        padding: 30px;
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+        transition: all 0.25s ease;
+    }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+    .add-product-card {
+        border-top: 3px solid #d4af37;
+    }
+
+    .orders-card {
+        border-top: 3px solid #151515;
+    }
+
+    .action-icon {
+        width: 58px;
+        height: 58px;
+        flex-shrink: 0;
+        border-radius: 14px;
+        background: #151515;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+    }
+
+    .gold-icon {
+        background: #d4af37;
+    }
+
+    .action-content {
+        flex: 1;
+    }
+
+        .action-content h4 {
+            color: #111111;
+            font-weight: 800;
+            margin: 0 0 8px;
+        }
+
+        .action-content p {
+            color: #777777;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+
+    /* =====================================================
+               ACTION BUTTONS
+               ===================================================== */
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-width: 175px;
+        padding: 11px 16px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 800;
+        transition: all 0.2s ease;
+    }
+
+        .action-button span {
+            font-size: 1.1rem;
+        }
+
+    .dark-button {
+        background: #151515;
+        color: #ffffff;
+        border: 1px solid #151515;
+    }
+
+        .dark-button:hover {
+            background: #d4af37;
+            border-color: #d4af37;
+            color: #111111;
+        }
+
+    .gold-button {
+        background: #d4af37;
+        color: #111111;
+        border: 1px solid #d4af37;
+    }
+
+        .gold-button:hover {
+            background: #b8860b;
+            border-color: #b8860b;
+            color: #ffffff;
+        }
+
+
+    /* =====================================================
+               RESPONSIVE
+               ===================================================== */
+
+    @@media (max-width: 768px) {
+
+        .dashboard-header h1 {
+            font-size: 2.1rem;
+        }
+
+        .action-card {
+            padding: 22px;
+        }
+    }
+
+
+    @@media (max-width: 576px) {
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+            .dashboard-header h1 {
+                font-size: 1.9rem;
+            }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            font-size: 1.5rem;
+        }
+
+        .stat-content h2 {
+            font-size: 1.4rem;
+        }
+
+        .action-card {
+            flex-direction: column;
+        }
+
+        .action-button {
+            width: 100%;
+        }
+    }
+
+</style>

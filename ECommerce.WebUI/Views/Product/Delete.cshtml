@@ -1,0 +1,402 @@
+﻿@model ECommerce.Domain.Entities.Product
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="delete-page">
+
+    <div class="page-header">
+        <div>
+            <h1>Delete Product</h1>
+            <p>Review the product before deleting it.</p>
+        </div>
+
+        <a asp-action="Index" class="back-button">
+            Back to Products
+        </a>
+    </div>
+
+
+    <div class="delete-card">
+
+        <div class="warning-icon">
+            !
+        </div>
+
+        <h2>Are you sure you want to delete this product?</h2>
+
+        <p class="warning-text">
+            This action cannot be undone.
+        </p>
+
+
+        <div class="product-preview">
+
+            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <div class="product-image-container">
+
+                    <img src="@Url.Content("~/images/products/" + Model.ImageUrl)"
+                         alt="@Model.Name"
+                         class="product-image" />
+
+                </div>
+            }
+            else
+            {
+                <div class="product-image-container no-image">
+                    No Image
+                </div>
+            }
+
+
+            <div class="product-info">
+
+                <h3>@Model.Name</h3>
+
+                <p class="description">
+                    @Model.Description
+                </p>
+
+                <div class="product-details">
+
+                    <div class="detail-item">
+                        <span>Price</span>
+                        <strong>@Model.Price.ToString("C")</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Available Quantity</span>
+                        <strong>@Model.AvailableQuantity</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Category</span>
+                        <strong>
+                            @(Model.Category?.Name ?? "Unknown")
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <a asp-action="Index"
+               class="cancel-button">
+                Cancel
+            </a>
+
+            <form asp-action="Delete"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="delete-button">
+                    Delete Product
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .delete-page {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e2e2e2;
+    }
+
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #0b0b0b;
+        }
+
+
+        .page-header p {
+            margin: 0;
+            color: #777;
+        }
+
+
+    .back-button {
+        display: inline-block;
+        padding: 11px 20px;
+        border: 1px solid #d4af37;
+        border-radius: 10px;
+        color: #b8860b;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+
+
+        .back-button:hover {
+            background: #d4af37;
+            color: #0b0b0b;
+        }
+
+
+    .delete-card {
+        background: #fff;
+        border: 1px solid #e2e2e2;
+        border-radius: 18px;
+        padding: 40px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        text-align: center;
+    }
+
+
+    .warning-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff4d6;
+        color: #b8860b;
+        font-size: 34px;
+        font-weight: 700;
+    }
+
+
+    .delete-card h2 {
+        margin: 0 0 10px;
+        color: #0b0b0b;
+        font-size: 25px;
+    }
+
+
+    .warning-text {
+        margin: 0 0 30px;
+        color: #777;
+    }
+
+
+    .product-preview {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 25px;
+        margin-bottom: 30px;
+        text-align: left;
+        background: #fafafa;
+        border: 1px solid #e5e5e5;
+        border-radius: 15px;
+    }
+
+
+    .product-image-container {
+        width: 220px;
+        height: 220px;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: #f2f2f2;
+    }
+
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 14px;
+    }
+
+
+    .product-info {
+        flex: 1;
+    }
+
+
+        .product-info h3 {
+            margin: 0 0 12px;
+            color: #222;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+
+    .description {
+        margin-bottom: 20px;
+        color: #666;
+        line-height: 1.6;
+    }
+
+
+    .product-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+
+        .detail-item span {
+            color: #888;
+            font-size: 13px;
+        }
+
+
+        .detail-item strong {
+            color: #b8860b;
+            font-size: 17px;
+        }
+
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding-top: 25px;
+        border-top: 1px solid #e5e5e5;
+    }
+
+
+        .actions form {
+            margin: 0;
+        }
+
+
+    .cancel-button,
+    .delete-button {
+        display: inline-block;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+
+    .cancel-button {
+        background: #fff;
+        border: 1px solid #d4af37;
+        color: #b8860b;
+    }
+
+
+        .cancel-button:hover {
+            background: #d4af37;
+            color: #0b0b0b;
+        }
+
+
+    .delete-button {
+        background: #0b0b0b;
+        border: 1px solid #0b0b0b;
+        color: #d4af37;
+    }
+
+
+        .delete-button:hover {
+            background: #d4af37;
+            border-color: #d4af37;
+            color: #0b0b0b;
+        }
+
+
+    @@media (max-width: 700px) {
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+
+        .back-button {
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+
+        .delete-card {
+            padding: 25px 20px;
+        }
+
+
+        .product-preview {
+            flex-direction: column;
+            text-align: center;
+        }
+
+
+        .product-image-container {
+            width: 180px;
+            height: 180px;
+        }
+
+
+        .product-details {
+            justify-content: center;
+        }
+
+
+        .actions {
+            flex-direction: column;
+        }
+
+
+        .cancel-button,
+        .delete-button {
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+
+        .actions form {
+            width: 100%;
+        }
+    }
+
+</style>

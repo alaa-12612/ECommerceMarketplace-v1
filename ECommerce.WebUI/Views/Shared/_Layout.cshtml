@@ -1,0 +1,1225 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Marketly</title>
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+
+    <!-- Google Fonts -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <!-- Site CSS -->
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+         ===================================================== -->
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg marketly-navbar">
+
+            <div class="container">
+
+
+                <!-- Brand -->
+
+                <a class="navbar-brand marketly-brand"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <span class="brand-icon">
+                        ◆
+                    </span>
+
+                    Marketly
+
+                </a>
+
+
+                <!-- Mobile Button -->
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+
+                <!-- Navigation -->
+
+                <div class="collapse navbar-collapse"
+                     id="mainNavbar">
+
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+                        <!-- Home -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- Customer Links -->
+
+                  <!-- Customer Links -->
+@if (!User.IsInRole("Admin") && !User.IsInRole("Seller"))
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Cart" asp-action="Index">Cart</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Wishlist" asp-action="Index">Wishlist</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Order" asp-action="MyOrders">Orders</a>
+    </li>
+
+    <!-- زر طلب التحويل إلى تاجر -->
+    <li class="nav-item">
+        <form asp-controller="Account" asp-action="RequestToBecomeSeller" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="nav-link btn btn-link text-warning fw-bold" style="text-decoration: none;">
+                Request to be Seller
+            </button>
+        </form>
+    </li>
+}
+
+
+                        <!-- Seller Links -->
+
+                        @if (User.IsInRole("Seller"))
+                        {
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Seller"
+                                   asp-action="Index">
+
+                                    Dashboard
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Product"
+                                   asp-action="Index">
+
+                                    My Products
+
+                                </a>
+
+                            </li>
+
+                        }
+
+
+                        <!-- Admin Links -->
+
+                        @if (User.IsInRole("Admin"))
+                        {
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Admin"
+                                   asp-action="Index">
+
+                                    Dashboard
+
+                                </a>
+
+                            </li>
+
+                        }
+
+                    </ul>
+
+
+                    <!-- Account -->
+
+                    <div class="d-flex align-items-center gap-2">
+
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+
+                            <span class="welcome-user">
+
+                                Hi, @User.Identity.Name
+
+                            </span>
+
+
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  class="m-0">
+
+                                <button type="submit"
+                                        class="nav-outline-button">
+
+                                    Logout
+
+                                </button>
+
+                            </form>
+
+                        }
+                        else
+                        {
+
+                            <a asp-controller="Account"
+                               asp-action="Login"
+                               class="nav-outline-button">
+
+                                Login
+
+                            </a>
+
+
+                            <a asp-controller="Account"
+                               asp-action="Register"
+                               class="nav-gold-button">
+
+                                Create Account
+
+                            </a>
+
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+         ===================================================== -->
+
+    <div class="container">
+
+        <main role="main"
+              class="pb-3">
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="mt-5">
+
+        <div class="container py-5">
+
+            <div class="row">
+
+
+                <!-- Store -->
+
+                <div class="col-md-4 mb-4">
+
+                    <h5 class="fw-bold">
+                        🛍️ Marketly
+                    </h5>
+
+                    <p>
+
+                        The best multi-vendor e-commerce platform.
+                        Shop the latest products at the best prices
+                        with full security.
+
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+
+                <div class="col-md-4 mb-4">
+
+                    <h5 class="fw-bold">
+                        Quick Links
+                    </h5>
+
+
+                    <p>
+
+                        <a asp-controller="Home"
+                           asp-action="Index">
+
+                            Home
+
+                        </a>
+
+                    </p>
+
+
+                    <p>
+
+                        <a asp-controller="Cart"
+                           asp-action="Index">
+
+                            Shopping Cart
+
+                        </a>
+
+                    </p>
+
+
+                    <p>
+
+                        <a asp-controller="Order"
+                           asp-action="MyOrders">
+
+                            My Orders
+
+                        </a>
+
+                    </p>
+
+                </div>
+
+
+                <!-- Contact -->
+
+                <div class="col-md-4 mb-4">
+
+                    <h5 class="fw-bold">
+                        Contact Us
+                    </h5>
+
+
+                    <p>
+                        Cairo, Egypt
+                    </p>
+
+
+                    <p>
+                        info@ecommerce.com
+                    </p>
+
+
+                    <p>
+                        +20 100 123 4567
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <hr />
+
+
+            <div class="text-center">
+
+                <p class="mb-0">
+
+                    Copyright © 2026 Marketly.
+                    All rights reserved.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         AI CHATBOT
+         ===================================================== -->
+
+    <div id="chatbot-container">
+
+
+        <!-- Floating Button -->
+
+        <button id="chatbot-button"
+                type="button"
+                aria-label="Open AI Assistant">
+
+            💬
+
+        </button>
+
+
+        <!-- Chat Window -->
+
+        <div id="chatbot-window">
+
+
+            <!-- Header -->
+
+            <div class="chatbot-header">
+
+                <div>
+
+                    <div class="chatbot-title">
+
+                        AI Assistant
+
+                    </div>
+
+
+                    <div class="chatbot-status">
+
+                        Online
+
+                    </div>
+
+                </div>
+
+
+                <button id="chatbot-close"
+                        type="button"
+                        aria-label="Close">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- Messages -->
+
+            <div id="chatbot-messages">
+
+
+                <div class="bot-message">
+
+                    Hello! 👋
+                    <br />
+                    <br />
+                    How can I help you?
+
+                </div>
+
+            </div>
+
+
+            <!-- Input -->
+
+            <div class="chatbot-input-area">
+
+                <input id="chatbot-input"
+                       type="text"
+                       placeholder="Type your message..."
+                       autocomplete="off" />
+
+
+                <button id="chatbot-send"
+                        type="button"
+                        aria-label="Send">
+
+                    ➤
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         AI CHATBOT CSS
+         ===================================================== -->
+
+    <style>
+
+        /* ==============================
+           CHATBOT CONTAINER
+           ============================== */
+
+        #chatbot-container {
+
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            z-index: 99999;
+
+            font-family: Arial, sans-serif;
+
+        }
+
+
+        /* ==============================
+           FLOATING BUTTON
+           ============================== */
+
+        #chatbot-button {
+
+            width: 60px;
+            height: 60px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #000000;
+
+            color: #D4AF37;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.30);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition: 0.2s;
+
+        }
+
+
+        #chatbot-button:hover {
+
+            transform: scale(1.05);
+
+            background: #D4AF37;
+
+            color: #000000;
+
+        }
+
+
+        /* ==============================
+           CHAT WINDOW
+           ============================== */
+
+        #chatbot-window {
+
+            display: none;
+
+            position: absolute;
+
+            right: 0;
+            bottom: 75px;
+
+            width: 380px;
+            height: 540px;
+
+            background: #ffffff;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.30);
+
+            border: 1px solid #D4AF37;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* ==============================
+           HEADER
+           ============================== */
+
+        .chatbot-header {
+
+            height: 70px;
+
+            background: #000000;
+
+            color: #D4AF37;
+
+            padding: 12px 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            box-sizing: border-box;
+
+        }
+
+
+        .chatbot-title {
+
+            font-size: 20px;
+
+            font-weight: 600;
+
+            color: #D4AF37;
+
+        }
+
+
+        .chatbot-status {
+
+            font-size: 14px;
+
+            margin-top: 3px;
+
+            color: #ffffff;
+
+            opacity: 0.85;
+
+        }
+
+
+        /* ==============================
+           CLOSE BUTTON
+           ============================== */
+
+        #chatbot-close {
+
+            border: none;
+
+            background: transparent;
+
+            color: #D4AF37;
+
+            font-size: 34px;
+
+            font-weight: 300;
+
+            line-height: 1;
+
+            cursor: pointer;
+
+            padding: 0;
+
+        }
+
+
+        #chatbot-close:hover {
+
+            color: #ffffff;
+
+        }
+
+
+        /* ==============================
+           MESSAGES
+           ============================== */
+
+        #chatbot-messages {
+
+            height: 405px;
+
+            padding: 16px;
+
+            overflow-y: auto;
+
+            background: #f8f8f8;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* Bot */
+
+        .bot-message {
+
+            background: #ffffff;
+
+            border: 1px solid #dddddd;
+
+            border-radius: 15px;
+
+            padding: 14px 16px;
+
+            margin-bottom: 12px;
+
+            max-width: 82%;
+
+            font-size: 17px;
+
+            line-height: 1.5;
+
+            color: #222222;
+
+            white-space: pre-wrap;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* User */
+
+        .user-message {
+
+            background: #000000;
+
+            color: #D4AF37;
+
+            border-radius: 15px;
+
+            padding: 12px 16px;
+
+            margin-bottom: 12px;
+
+            margin-left: auto;
+
+            max-width: 82%;
+
+            font-size: 17px;
+
+            line-height: 1.4;
+
+            white-space: pre-wrap;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* ==============================
+           INPUT AREA
+           ============================== */
+
+        .chatbot-input-area {
+
+            height: 65px;
+
+            background: #ffffff;
+
+            border-top: 1px solid #dddddd;
+
+            padding: 8px 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        #chatbot-input {
+
+            flex: 1;
+
+            min-width: 0;
+
+            height: 48px;
+
+            border: 1px solid #cccccc;
+
+            border-radius: 25px;
+
+            padding: 0 16px;
+
+            font-size: 16px;
+
+            outline: none;
+
+            box-sizing: border-box;
+
+        }
+
+
+        #chatbot-input:focus {
+
+            border-color: #D4AF37;
+
+            box-shadow:
+                0 0 0 2px rgba(212, 175, 55, 0.15);
+
+        }
+
+
+        /* ==============================
+           SEND BUTTON
+           ============================== */
+
+        #chatbot-send {
+
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #000000;
+
+            color: #D4AF37;
+
+            font-size: 21px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        #chatbot-send:hover {
+
+            background: #D4AF37;
+
+            color: #000000;
+
+        }
+
+
+        /* ==============================
+           SCROLLBAR
+           ============================== */
+
+        #chatbot-messages::-webkit-scrollbar {
+
+            width: 7px;
+
+        }
+
+
+        #chatbot-messages::-webkit-scrollbar-thumb {
+
+            background: #D4AF37;
+
+            border-radius: 10px;
+
+        }
+
+
+        #chatbot-messages::-webkit-scrollbar-track {
+
+            background: #eeeeee;
+
+        }
+
+
+        /* ==============================
+           MOBILE
+           ============================== */
+
+        @@media (max-width: 576px) {
+
+            #chatbot-container {
+
+                right: 15px;
+
+                bottom: 15px;
+
+            }
+
+
+            #chatbot-window {
+
+                width: calc(100vw - 30px);
+
+                height: 500px;
+
+                right: 0;
+
+                bottom: 70px;
+
+            }
+
+
+            #chatbot-messages {
+
+                height: 365px;
+
+            }
+
+        }
+
+    </style>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+
+    <!-- SweetAlert2 -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- TempData Notifications -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                var successMessage =
+                    '@TempData["Success"]';
+
+                var errorMessage =
+                    '@TempData["Error"]';
+
+
+                if (successMessage &&
+                    successMessage.trim() !== '') {
+
+                    Swal.fire({
+
+                        toast: true,
+
+                        position: 'top-end',
+
+                        icon: 'success',
+
+                        title: successMessage,
+
+                        showConfirmButton: false,
+
+                        timer: 3000,
+
+                        timerProgressBar: true
+
+                    });
+
+                }
+
+
+                if (errorMessage &&
+                    errorMessage.trim() !== '') {
+
+                    Swal.fire({
+
+                        toast: true,
+
+                        position: 'top-end',
+
+                        icon: 'error',
+
+                        title: errorMessage,
+
+                        showConfirmButton: false,
+
+                        timer: 4000,
+
+                        timerProgressBar: true
+
+                    });
+
+                }
+
+            });
+
+    </script>
+
+
+
+    <!-- =====================================================
+         CHAT JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+        const chatbotButton =
+            document.getElementById("chatbot-button");
+
+
+        const chatbotWindow =
+            document.getElementById("chatbot-window");
+
+
+        const chatbotClose =
+            document.getElementById("chatbot-close");
+
+
+        const chatbotInput =
+            document.getElementById("chatbot-input");
+
+
+        const chatbotSend =
+            document.getElementById("chatbot-send");
+
+
+        const chatbotMessages =
+            document.getElementById("chatbot-messages");
+
+
+
+        // Open chatbot
+
+        chatbotButton.addEventListener(
+            "click",
+            function () {
+
+                chatbotWindow.style.display =
+                    "block";
+
+                chatbotInput.focus();
+
+            });
+
+
+
+        // Close chatbot
+
+        chatbotClose.addEventListener(
+            "click",
+            function () {
+
+                chatbotWindow.style.display =
+                    "none";
+
+            });
+
+
+
+        // Add message
+
+        function addMessage(message, type) {
+
+            const div =
+                document.createElement("div");
+
+
+            if (type === "user") {
+
+                div.className =
+                    "user-message";
+
+            }
+            else {
+
+                div.className =
+                    "bot-message";
+
+            }
+
+
+            div.textContent =
+                message;
+
+
+            chatbotMessages.appendChild(div);
+
+
+            chatbotMessages.scrollTop =
+                chatbotMessages.scrollHeight;
+
+        }
+
+
+
+        // Send message
+
+        async function sendChatMessage() {
+
+            const message =
+                chatbotInput.value.trim();
+
+
+            if (!message) {
+
+                return;
+
+            }
+
+
+            addMessage(
+                message,
+                "user"
+            );
+
+
+            chatbotInput.value =
+                "";
+
+
+            chatbotInput.focus();
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/Chat/Ask",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded"
+                            },
+
+                            body:
+                                "message=" +
+                                encodeURIComponent(message)
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (data.success) {
+
+                    addMessage(
+                        data.response,
+                        "bot"
+                    );
+
+                }
+                else {
+
+                    addMessage(
+                        data.response ||
+                        "Something went wrong.",
+                        "bot"
+                    );
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+
+                addMessage(
+                    "Sorry, something went wrong. Please try again.",
+                    "bot"
+                );
+
+            }
+
+        }
+
+
+
+        // Send button
+
+        chatbotSend.addEventListener(
+            "click",
+            sendChatMessage
+        );
+
+
+
+        // Enter key
+
+        chatbotInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    sendChatMessage();
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false
+    )
+
+</body>
+
+</html>

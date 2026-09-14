@@ -1,0 +1,301 @@
+﻿@model ECommerce.Domain.Entities.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="admin-page">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>
+                📦 Order #@Model.Id
+            </h2>
+
+            <p>
+                Complete order information.
+            </p>
+
+        </div>
+
+
+        <a asp-action="ManageOrders"
+           class="gold-button">
+
+            ← Back to Orders
+
+        </a>
+
+    </div>
+
+
+
+    <div class="row g-4">
+
+
+        <!-- Order Information -->
+
+        <div class="col-md-6">
+
+            <div class="info-card">
+
+                <div class="info-header">
+                    📋 Order Information
+                </div>
+
+                <div class="info-body">
+
+                    <p>
+                        <strong>Order ID:</strong>
+                        #@Model.Id
+                    </p>
+
+                    <p>
+                        <strong>Order Date:</strong>
+                        @Model.OrderDate.ToString("yyyy-MM-dd HH:mm")
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        <span class="status-badge">
+                            @Model.Status
+                        </span>
+
+                    </p>
+
+                    <p>
+                        <strong>Total Amount:</strong>
+
+                        <span class="price">
+                            @Model.TotalPrice.ToString("C")
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Customer -->
+
+        <div class="col-md-6">
+
+            <div class="info-card">
+
+                <div class="info-header">
+                    👤 Customer Details
+                </div>
+
+                <div class="info-body">
+
+                    <p>
+                        <strong>Customer ID:</strong>
+                        @Model.CustomerId
+                    </p>
+
+                    <p>
+                        <strong>Name / Email:</strong>
+
+                        @(Model.Customer != null
+                            ? Model.Customer.UserName
+                            : "N/A")
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Order Items -->
+
+    <div class="items-card mt-4">
+
+        <div class="items-header">
+
+            🛍️ Items in Order
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+
+                        <th>Unit Price</th>
+
+                        <th>Quantity</th>
+
+                        <th>Subtotal</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (Model.OrderItems != null &&
+                         Model.OrderItems.Any())
+                    {
+
+                        foreach (var item in Model.OrderItems)
+                        {
+
+                            <tr>
+
+                                <td>
+                                    @(item.Product != null
+                                        ? item.Product.Name
+                                        : "N/A")
+                                </td>
+
+                                <td>
+                                    @item.UnitPrice.ToString("C")
+                                </td>
+
+                                <td>
+                                    @item.Quantity
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @((item.Quantity *
+                                           item.UnitPrice).ToString("C"))
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        }
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .admin-page {
+        padding: 30px 0;
+    }
+
+    .page-header {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #D4AF37;
+    }
+
+        .page-header h2 {
+            color: #D4AF37;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 5px 0 0;
+            color: #ccc;
+        }
+
+    .gold-button {
+        background: #D4AF37;
+        color: #000;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .gold-button:hover {
+            background: white;
+        }
+
+    .info-card,
+    .items-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .info-header,
+    .items-header {
+        background: #000;
+        color: #D4AF37;
+        padding: 15px 20px;
+        font-weight: 700;
+    }
+
+    .info-body {
+        padding: 20px;
+    }
+
+        .info-body p {
+            margin-bottom: 15px;
+        }
+
+    .status-badge {
+        background: #D4AF37;
+        color: #000;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .price {
+        color: #000;
+        font-weight: 700;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-table th {
+            background: #f4f4f4;
+            color: #000;
+            padding: 14px;
+            text-align: left;
+        }
+
+        .admin-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+</style>

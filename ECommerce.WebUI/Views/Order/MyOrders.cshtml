@@ -1,0 +1,375 @@
+﻿@model IEnumerable<ECommerce.Domain.Entities.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container py-5">
+
+    <div class="orders-header">
+
+        <span class="orders-label">
+            CUSTOMER AREA
+        </span>
+
+        <h1>
+            My Orders
+        </h1>
+
+        <p>
+            View your orders, details and current status.
+        </p>
+
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-orders">
+
+            <div class="empty-orders-icon">
+                📦
+            </div>
+
+            <h3>
+                No Orders Yet
+            </h3>
+
+            <p>
+                You haven't placed any orders yet.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-gold">
+
+                Start Shopping
+
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="orders-card">
+
+            <div class="orders-card-header">
+
+                <h4>
+                    Your Orders
+                </h4>
+
+                <span>
+                    @Model.Count() order(s)
+                </span>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="orders-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong class="order-number">
+                                        #@order.Id
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @order.OrderDate.ToString(
+                                        "dd/MM/yyyy hh:mm tt"
+                                    )
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        @order.TotalPrice.ToString("C")
+                                    </strong>
+                                </td>
+
+
+                                <td>
+
+                                    @if (order.Status ==
+                                        ECommerce.Domain.Entities.OrderStatus.Pending)
+                                    {
+                                        <span class="status-badge pending">
+                                            Pending
+                                        </span>
+                                    }
+                                    else if (order.Status ==
+                                        ECommerce.Domain.Entities.OrderStatus.Confirmed)
+                                    {
+                                        <span class="status-badge confirmed">
+                                            Confirmed
+                                        </span>
+                                    }
+                                    else if (order.Status ==
+                                        ECommerce.Domain.Entities.OrderStatus.Shipped)
+                                    {
+                                        <span class="status-badge shipped">
+                                            Shipped
+                                        </span>
+                                    }
+                                    else if (order.Status ==
+                                        ECommerce.Domain.Entities.OrderStatus.Delivered)
+                                    {
+                                        <span class="status-badge delivered">
+                                            Delivered
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge cancelled">
+                                            Cancelled
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@order.Id"
+                                           class="details-button">
+
+                                            Details
+
+                                        </a>
+
+
+                                        @if (order.Status ==
+                                            ECommerce.Domain.Entities.OrderStatus.Pending
+                                            ||
+                                            order.Status ==
+                                            ECommerce.Domain.Entities.OrderStatus.Confirmed)
+                                        {
+                                            <form asp-action="Cancel"
+                                                  asp-route-id="@order.Id"
+                                                  method="post"
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to cancel this order?');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="cancel-button">
+
+                                                    Cancel
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+<style>
+
+    .orders-header {
+        margin-bottom: 35px;
+    }
+
+    .orders-label {
+        color: #b8860b;
+        font-size: .75rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .orders-header h1 {
+        color: #111;
+        font-size: 2.6rem;
+        font-weight: 800;
+        margin: 8px 0;
+    }
+
+    .orders-header p {
+        color: #777;
+    }
+
+    .orders-card {
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+
+    .orders-card-header {
+        background: #000;
+        color: white;
+        padding: 20px 25px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .orders-card-header h4 {
+            margin: 0;
+        }
+
+        .orders-card-header span {
+            color: #d4af37;
+        }
+
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .orders-table th {
+            background: #f7f7f7;
+            padding: 16px;
+            color: #555;
+            text-align: left;
+        }
+
+        .orders-table td {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+    .order-number {
+        color: #b8860b;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: .75rem;
+        font-weight: 700;
+    }
+
+    .pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .confirmed {
+        background: #e2e3ff;
+        color: #3d3f91;
+    }
+
+    .shipped {
+        background: #e7f1ff;
+        color: #0d6efd;
+    }
+
+    .delivered {
+        background: #e2f3e8;
+        color: #198754;
+    }
+
+    .cancelled {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .actions {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+    }
+
+    .details-button,
+    .cancel-button {
+        border: none;
+        padding: 7px 12px;
+        border-radius: 7px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .details-button {
+        background: #000;
+        color: #d4af37;
+    }
+
+        .details-button:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+    .cancel-button {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .empty-orders {
+        text-align: center;
+        padding: 70px 20px;
+        border: 1px solid #ddd;
+        border-radius: 18px;
+    }
+
+    .empty-orders-icon {
+        font-size: 4rem;
+    }
+
+    .btn-gold {
+        background: #d4af37;
+        color: #000;
+        font-weight: 700;
+        padding: 12px 25px;
+        border-radius: 9px;
+    }
+
+</style>

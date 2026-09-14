@@ -1,0 +1,953 @@
+/* =========================================================
+   ASP.NET CORE DEFAULT STYLES
+   ========================================================= */
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+
+/* =========================================================
+   DEFAULT FOCUS STYLES
+   ========================================================= */
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #D4AF37;
+}
+
+
+/* =========================================================
+   FORM PLACEHOLDERS
+   ========================================================= */
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+
+/* =========================================================
+   MARKETLY BLACK & GOLD COLORS
+   ========================================================= */
+
+:root {
+    --market-black: #0B0B0B;
+    --market-black-light: #151515;
+    --market-black-soft: #222222;
+    --market-gold: #D4AF37;
+    --market-gold-dark: #B8860B;
+    --market-gold-light: #F5D76E;
+    --market-white: #FFFFFF;
+    --market-background: #F7F7F7;
+    --market-text: #222222;
+    --market-muted: #777777;
+    --market-border: #E5E5E5;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+body {
+    background-color: var(--market-background);
+    color: var(--market-text);
+    font-family: 'DM Sans', Arial, sans-serif;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+    background-color: var(--market-black) !important;
+    border-bottom: 2px solid var(--market-gold);
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.navbar-brand {
+    color: var(--market-gold) !important;
+    font-family: 'Outfit', Arial, sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+    .navbar-brand:hover {
+        color: var(--market-gold-light) !important;
+    }
+
+.navbar .nav-link {
+    color: #FFFFFF !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+    .navbar .nav-link:hover {
+        color: var(--market-gold) !important;
+    }
+
+.navbar-toggler {
+    border-color: var(--market-gold);
+}
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+    }
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    transition: color 0.2s ease;
+}
+
+    a:hover {
+        color: var(--market-gold-dark);
+    }
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.btn-primary {
+    background-color: var(--market-gold) !important;
+    border-color: var(--market-gold) !important;
+    color: #111111 !important;
+    font-weight: 700;
+}
+
+    .btn-primary:hover {
+        background-color: var(--market-gold-dark) !important;
+        border-color: var(--market-gold-dark) !important;
+        color: #FFFFFF !important;
+    }
+
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: var(--market-gold-dark) !important;
+        border-color: var(--market-gold-dark) !important;
+    }
+
+
+/* =========================================================
+   OUTLINE PRIMARY BUTTON
+   ========================================================= */
+
+.btn-outline-primary {
+    color: var(--market-gold-dark) !important;
+    border-color: var(--market-gold) !important;
+    font-weight: 600;
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--market-gold) !important;
+        border-color: var(--market-gold) !important;
+        color: #111111 !important;
+    }
+
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
+.hero {
+    background: linear-gradient( 135deg, #050505 0%, #111111 55%, #2A2108 100% );
+    color: #FFFFFF;
+    border-radius: 24px;
+    padding: 70px 45px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(212, 175, 55, 0.12);
+        border-radius: 50%;
+        top: -120px;
+        right: -80px;
+    }
+
+    .hero h1 {
+        position: relative;
+        color: var(--market-gold);
+        font-family: 'Outfit', Arial, sans-serif;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+
+    .hero p {
+        position: relative;
+        color: #DDDDDD;
+        font-size: 1.1rem;
+    }
+
+
+/* =========================================================
+   SEARCH BOX
+   ========================================================= */
+
+.search-box {
+    background-color: #FFFFFF;
+    border: 2px solid var(--market-gold);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+    .search-box .form-control,
+    .search-box .form-select {
+        border: none;
+        box-shadow: none;
+    }
+
+        .search-box .form-control:focus,
+        .search-box .form-select:focus {
+            border: none;
+            box-shadow: none;
+        }
+
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.form-control,
+.form-select {
+    border: 1px solid var(--market-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--market-gold) !important;
+        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15) !important;
+    }
+
+
+/* =========================================================
+   PRODUCT CARDS
+   ========================================================= */
+
+.product-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--market-border);
+    border-radius: 18px;
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--market-gold);
+        box-shadow: 0 15px 35px rgba(212, 175, 55, 0.18);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover img {
+        transform: scale(1.03);
+    }
+
+    .product-card .card-body {
+        padding: 20px;
+    }
+
+    .product-card .card-title {
+        color: #111111;
+        font-family: 'Outfit', Arial, sans-serif;
+        font-weight: 700;
+    }
+
+    .product-card .card-text {
+        color: var(--market-muted);
+    }
+
+
+/* =========================================================
+   PRODUCT PRICE
+   ========================================================= */
+
+.product-price {
+    color: var(--market-gold-dark) !important;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CATEGORY CARDS
+   ========================================================= */
+
+.category-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--market-border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .category-card:hover {
+        border-color: var(--market-gold);
+        color: var(--market-gold-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.12);
+    }
+
+
+/* =========================================================
+   SECTION TITLES
+   ========================================================= */
+
+.section-title {
+    color: #111111;
+    font-family: 'Outfit', Arial, sans-serif;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+    .section-title span {
+        color: var(--market-gold-dark);
+    }
+
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
+.badge-gold {
+    background-color: var(--market-gold);
+    color: #111111;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.table {
+    background-color: #FFFFFF;
+}
+
+    .table thead {
+        background-color: var(--market-black);
+        color: var(--market-gold);
+    }
+
+        .table thead th {
+            border-color: #333333;
+        }
+
+    .table tbody tr:hover {
+        background-color: #FFFDF3;
+    }
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.alert-warning {
+    background-color: #FFF8DD;
+    border-color: var(--market-gold);
+    color: #6B5300;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background-color: var(--market-black);
+    color: #FFFFFF;
+    border-top: 2px solid var(--market-gold);
+}
+
+    footer a {
+        color: var(--market-gold);
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            color: var(--market-gold-light);
+        }
+
+
+/* =========================================================
+   CARDS / SHADOWS
+   ========================================================= */
+
+.shadow-sm {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+
+/* =========================================================
+   CONTAINERS
+   ========================================================= */
+
+.container {
+    position: relative;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .hero {
+        padding: 45px 25px;
+        border-radius: 18px;
+    }
+
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+
+    .product-card img {
+        height: 200px;
+    }
+
+    .navbar-brand {
+        font-size: 1.4rem;
+    }
+}
+
+
+/* =========================================================
+   SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .hero {
+        padding: 35px 20px;
+    }
+
+        .hero h1 {
+            font-size: 1.9rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+}
+/* =========================================================
+   HOME PAGE FIX
+   ========================================================= */
+
+.hero {
+    width: 100%;
+}
+
+.category-card {
+    height: 100%;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.25s ease;
+    color: #222222;
+}
+
+    .category-card:hover {
+        border-color: #D4AF37;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+        color: #B8860B;
+    }
+
+.product-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 18px;
+    overflow: hidden;
+    height: 100%;
+}
+
+    .product-card img {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+    }
+
+    .product-card .card-body {
+        padding: 20px;
+    }
+
+.search-box {
+    width: 100%;
+}
+
+.section-title {
+    font-family: 'Outfit', sans-serif;
+}
+/* =========================================================
+   PRODUCT CREATE PAGE
+   ========================================================= */
+
+.text-gold {
+    color: #b8860b !important;
+    letter-spacing: 1px;
+}
+
+
+/* Main Form Card */
+
+.product-form-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Header */
+
+.form-card-header {
+    background: #0b0b0b;
+    color: #ffffff;
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #d4af37;
+}
+
+    .form-card-header h4 {
+        font-weight: 800;
+    }
+
+    .form-card-header p {
+        color: #bdbdbd;
+        font-size: 14px;
+    }
+
+.form-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d4af37;
+    color: #111111;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+/* Body */
+
+.form-card-body {
+    padding: 35px;
+}
+
+
+/* Labels */
+
+.form-label {
+    font-weight: 700;
+    color: #171717;
+    margin-bottom: 8px;
+}
+
+
+/* Inputs */
+
+.form-control,
+.form-select {
+    min-height: 48px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+
+.form-control::placeholder {
+    color: #a5a5a5;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    outline: none;
+}
+
+
+/* Input Group */
+
+.input-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group-text {
+    background: #0b0b0b;
+    color: #d4af37;
+    border: 1px solid #0b0b0b;
+    font-weight: 700;
+}
+
+
+/* Upload Box */
+
+.image-upload-box {
+    border: 2px dashed #d4af37;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    background: #fffdf5;
+    transition: all 0.2s ease;
+}
+
+    .image-upload-box:hover {
+        background: #fff9df;
+        border-color: #b8860b;
+    }
+
+
+    .image-upload-box h6 {
+        font-weight: 800;
+        margin-top: 10px;
+        color: #151515;
+    }
+
+
+    .image-upload-box p {
+        color: #777777;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+
+    .image-upload-box .form-control {
+        max-width: 500px;
+        margin: auto;
+    }
+
+
+.upload-icon {
+    width: 55px;
+    height: 55px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #0b0b0b;
+    color: #d4af37;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+/* Buttons */
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #eeeeee;
+}
+
+
+.btn-gold {
+    background: #d4af37;
+    border: 1px solid #d4af37;
+    color: #111111;
+    font-weight: 800;
+    padding: 11px 28px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+
+    .btn-gold:hover {
+        background: #b8860b;
+        border-color: #b8860b;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(184, 134, 11, 0.25);
+    }
+
+
+.btn-outline-dark {
+    border: 1px solid #222222;
+    color: #222222;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 11px 22px;
+}
+
+
+    .btn-outline-dark:hover {
+        background: #0b0b0b;
+        color: #d4af37;
+        border-color: #0b0b0b;
+    }
+
+
+/* Validation */
+
+.text-danger {
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .product-form-card {
+        margin: 15px;
+    }
+
+    .form-card-body {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+        .form-actions .btn {
+            width: 100%;
+        }
+}
+
+}
+/* Product Details */
+.product-details-page {
+    padding: 40px 0;
+}
+
+.product-details-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 1px solid #e2e2e2;
+}
+
+.product-details-info {
+    padding: 20px;
+}
+
+.product-details-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0b0b0b;
+}
+
+.product-details-price {
+    color: #b8860b;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.review-card {
+    border: 1px solid #e2e2e2;
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.review-form {
+    border: 1px solid #d4af37;
+    border-radius: 16px;
+    padding: 25px;
+    background: #fff;
+}
+
+@media (max-width: 768px) {
+    .product-details-page {
+        padding: 20px 0;
+    }
+
+    .product-details-title {
+        font-size: 1.7rem;
+    }
+
+    .product-details-price {
+        font-size: 1.4rem;
+    }
+
+    .product-details-info {
+        padding: 20px 0;
+    }
+
+    .product-details-buttons {
+        flex-direction: column;
+    }
+
+        .product-details-buttons form,
+        .product-details-buttons .btn {
+            width: 100%;
+        }
+}
+/* ================================
+   MARKETLY NAVBAR
+   ================================ */
+
+.marketly-navbar {
+    background: #0b0b0b;
+    padding: 14px 0;
+    border-bottom: 2px solid #d4af37;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.marketly-brand {
+    color: #d4af37 !important;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+}
+
+.brand-icon {
+    color: #ffd700;
+    margin-right: 6px;
+}
+
+.marketly-navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 9px 14px !important;
+    transition: 0.3s ease;
+}
+
+    .marketly-navbar .nav-link:hover {
+        color: #d4af37 !important;
+    }
+
+    .marketly-navbar .nav-link.active {
+        color: #d4af37 !important;
+    }
+
+.welcome-user {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.nav-outline-button,
+.nav-gold-button {
+    display: inline-block;
+    padding: 9px 17px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.nav-outline-button {
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+}
+
+    .nav-outline-button:hover {
+        background: #d4af37;
+        color: #0b0b0b;
+    }
+
+.nav-gold-button {
+    background: #d4af37;
+    color: #0b0b0b;
+    border: 1px solid #d4af37;
+}
+
+    .nav-gold-button:hover {
+        background: #ffd700;
+        border-color: #ffd700;
+        color: #0b0b0b;
+    }
+
+.marketly-navbar .navbar-toggler {
+    border: 1px solid #d4af37;
+}
+
+    .marketly-navbar .navbar-toggler:focus {
+        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
+    }
+
+@media (max-width: 991px) {
+
+    .marketly-navbar .navbar-collapse {
+        padding-top: 15px;
+    }
+
+    .marketly-navbar .nav-link {
+        padding: 10px 0 !important;
+    }
+
+    .welcome-user {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}

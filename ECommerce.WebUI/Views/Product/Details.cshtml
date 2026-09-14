@@ -1,0 +1,152 @@
+﻿@model ECommerce.Domain.Entities.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var imageUrl = Model.ImageUrl;
+
+    var imageSrc =
+        !string.IsNullOrWhiteSpace(imageUrl)
+        ? (
+            imageUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            imageUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+                ? imageUrl
+                : Url.Content("~/images/products/" + imageUrl)
+          )
+        : null;
+}
+
+<div class="container py-5">
+
+    <div class="row g-5">
+
+        <!-- Product Image -->
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                @if (!string.IsNullOrWhiteSpace(imageSrc))
+                {
+                    <img src="@imageSrc"
+                         class="card-img-top"
+                         alt="@Model.Name"
+                         style="height:500px; object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center bg-light"
+                         style="height:500px;">
+                        <i class="bi bi-image text-muted"
+                           style="font-size:5rem;"></i>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-lg-6">
+
+            <div class="h-100 d-flex flex-column justify-content-center">
+
+                <span class="text-primary fw-semibold mb-2">
+                    @(Model.Category?.Name ?? "Product")
+                </span>
+
+                <h1 class="fw-bold mb-3">
+                    @Model.Name
+                </h1>
+
+                <div class="mb-4">
+
+                    <span class="display-6 fw-bold text-dark">
+                        @Model.Price.ToString("C")
+                    </span>
+
+                </div>
+
+                <p class="text-muted fs-5 mb-4">
+                    @Model.Description
+                </p>
+
+                <div class="mb-4">
+
+                    @if (Model.AvailableQuantity > 0)
+                    {
+                        <span class="badge bg-success px-3 py-2">
+                            In Stock
+                        </span>
+
+                        <span class="text-muted ms-2">
+                            @Model.AvailableQuantity available
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger px-3 py-2">
+                            Out of Stock
+                        </span>
+                    }
+
+                </div>
+
+                @if (Model.AvailableQuantity > 0)
+                {
+                    <form asp-controller="Cart"
+                          asp-action="AddToCart"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="productId"
+                               value="@Model.Id" />
+
+                        <div class="row g-2 mb-3">
+
+                            <div class="col-auto">
+
+                                <input type="number"
+                                       name="quantity"
+                                       value="1"
+                                       min="1"
+                                       max="@Model.AvailableQuantity"
+                                       class="form-control"
+                                       style="width:100px;" />
+
+                            </div>
+
+                            <div class="col">
+
+                                <button type="submit"
+                                        class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-cart-plus me-2"></i>
+                                    Add to Cart
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+                }
+
+                <div class="d-flex gap-2 mt-2">
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Continue Shopping
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

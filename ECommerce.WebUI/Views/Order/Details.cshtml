@@ -1,0 +1,229 @@
+﻿@model ECommerce.Domain.Entities.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container py-5">
+
+    <div class="order-header">
+
+        <div>
+
+            <span>
+                ORDER DETAILS
+            </span>
+
+            <h1>
+                Order #@Model.Id
+            </h1>
+
+            <p>
+                @Model.OrderDate.ToString("dd/MM/yyyy hh:mm tt")
+            </p>
+
+        </div>
+
+
+        <a asp-action="MyOrders"
+           class="back-button">
+
+            ← My Orders
+
+        </a>
+
+    </div>
+
+
+    <div class="order-card">
+
+        <div class="order-card-header">
+            Order Information
+        </div>
+
+
+        <div class="order-info">
+
+            <div>
+                <strong>Status</strong>
+
+                <p>
+                    @Model.Status
+                </p>
+            </div>
+
+
+            <div>
+                <strong>Total</strong>
+
+                <p>
+                    @Model.TotalPrice.ToString("C")
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="order-card mt-4">
+
+        <div class="order-card-header">
+            Products
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="order-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Subtotal
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <tr>
+
+                            <td>
+                                @(item.Product?.Name ?? "Product")
+                            </td>
+
+                            <td>
+                                @item.UnitPrice.ToString("C")
+                            </td>
+
+                            <td>
+                                @item.Quantity
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @((item.UnitPrice *
+                                       item.Quantity).ToString("C"))
+                                </strong>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .order-header {
+        background: #000;
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        border-bottom: 3px solid #d4af37;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .order-header span {
+            color: #d4af37;
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .order-header h1 {
+            margin: 7px 0;
+            color: white;
+        }
+
+        .order-header p {
+            margin: 0;
+            color: #ccc;
+        }
+
+    .back-button {
+        background: #d4af37;
+        color: #000;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+
+    .order-card-header {
+        background: #000;
+        color: #d4af37;
+        padding: 15px 20px;
+        font-weight: 700;
+    }
+
+    .order-info {
+        padding: 25px;
+        display: flex;
+        gap: 100px;
+    }
+
+        .order-info strong {
+            color: #777;
+        }
+
+        .order-info p {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .order-table th,
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        .order-table th {
+            background: #f7f7f7;
+        }
+
+</style>
