@@ -1,4 +1,4 @@
-﻿@model ECommerce.WebUI.ViewModels.ProductDetailsViewModel
+@model ECommerce.WebUI.ViewModels.ProductDetailsViewModel
 
 @{
     ViewData["Title"] = Model.Product.Name;
@@ -51,6 +51,37 @@
                 <h1 class="product-details-title">
                     @Model.Product.Name
                 </h1>
+
+                <!-- Overall Rating Badge -->
+                <div class="product-overall-rating mb-3">
+                    @if (Model.TotalReviews > 0)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rating-stars" style="color: #d4af37; font-size: 1.15rem; letter-spacing: 2px;">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Math.Round(Model.OverallRating))
+                                    {
+                                        <span>★</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #ddd;">★</span>
+                                    }
+                                }
+                            </div>
+                            <span class="fw-bold" style="color: #111; font-size: 1.05rem;">@Model.OverallRating.ToString("0.0")</span>
+                            <span class="text-muted" style="font-size: 0.9rem;">(@Model.TotalReviews @(Model.TotalReviews == 1 ? "review" : "reviews"))</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.9rem;">
+                            <span style="color: #ddd; letter-spacing: 2px; font-size: 1.15rem;">★★★★★</span>
+                            <span>No ratings yet</span>
+                        </div>
+                    }
+                </div>
 
                 <div class="product-details-price">
                     @Model.Product.Price.ToString("C")
@@ -193,13 +224,39 @@
     <!-- Reviews Section -->
     <div class="reviews-section">
 
-        <div class="section-heading">
+        <div class="section-heading d-flex flex-wrap justify-content-between align-items-end mb-4">
 
-            <span>PRODUCT REVIEWS</span>
+            <div>
+                <span>PRODUCT REVIEWS</span>
+                <h2>Customer Reviews</h2>
+            </div>
 
-            <h2>
-                Customer Reviews
-            </h2>
+            @if (Model.TotalReviews > 0)
+            {
+                <div class="overall-rating-summary p-3 rounded-3" style="background: #fafafa; border: 1px solid #e2e2e2; display: flex; align-items: center; gap: 15px;">
+                    <div class="text-center">
+                        <div style="font-size: 2rem; font-weight: 800; color: #b8860b; line-height: 1;">@Model.OverallRating.ToString("0.0")</div>
+                        <small class="text-muted" style="font-size: 0.75rem;">out of 5</small>
+                    </div>
+                    <div style="height: 35px; width: 1px; background: #ddd;"></div>
+                    <div>
+                        <div style="color: #d4af37; font-size: 1rem; letter-spacing: 2px;">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(Model.OverallRating))
+                                {
+                                    <span>★</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #ddd;">★</span>
+                                }
+                            }
+                        </div>
+                        <small class="text-muted" style="font-weight: 600;">Based on @Model.TotalReviews @(Model.TotalReviews == 1 ? "review" : "reviews")</small>
+                    </div>
+                </div>
+            }
 
         </div>
 

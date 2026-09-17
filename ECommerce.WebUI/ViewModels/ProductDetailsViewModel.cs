@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Entities;
+using ECommerce.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.WebUI.ViewModels
@@ -18,5 +18,11 @@ namespace ECommerce.WebUI.ViewModels
 
         // Indicates whether the current logged-in user is eligible to review this product
         public bool CanReview { get; set; }
+
+        // Overall average rating calculation (e.g. 4.5 out of 5)
+        public double OverallRating => Reviews.Any() ? Math.Round(Reviews.Average(r => r.Rating), 1) : 0;
+
+        // Total number of customer reviews
+        public int TotalReviews => Reviews.Count();
     }
 }
