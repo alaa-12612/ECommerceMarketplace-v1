@@ -6,40 +6,54 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.WebUI.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class WishlistController : Controller
     {
-        private readonly IWishlistRepository _wishlistRepository;
+        private readonly IWishlistService _wishlistService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public WishlistController(IWishlistRepository wishlistRepository, UserManager<ApplicationUser> userManager)
+        public WishlistController(IWishlistService wishlistService, UserManager<ApplicationUser> userManager)
         {
-            _wishlistRepository = wishlistRepository;
+            _wishlistService = wishlistService;
             _userManager = userManager;
         }
 
-       
+
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
-            var wishlist = await _wishlistRepository.GetUserWishlistAsync(userId);
+            var wishlist = await _wishlistService.GetUserWishlistAsync(userId!);
             return View(wishlist);
         }
 
-       
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToWishlist(int productId)
         {
             var userId = _userManager.GetUserId(User);
-            await _wishlistRepository.AddToWishlistAsync(userId, productId);
-            return RedirectToAction("Index", "Home"); 
+
+            var result = await _wishlistService.AddToWishlistAsync(userId!, productId);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+            }
+            else
+            {
+                TempData["Success"] = result.Message;
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
-       
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromWishlist(int id)
         {
-            await _wishlistRepository.RemoveFromWishlistAsync(id);
+            await _wishlistService.RemoveFromWishlistAsync(id);
+            TempData["Success"] = "Product removed from wishlist.";
             return RedirectToAction(nameof(Index));
         }
     }

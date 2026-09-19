@@ -9,139 +9,84 @@ namespace ECommerce.WebUI.Controllers
     [Authorize(Roles = "Customer")]
     public class OrderController : Controller
     {
-        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderService _orderService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public OrderController(
-            IOrderRepository orderRepository,
+            IOrderService orderService,
             UserManager<ApplicationUser> userManager)
         {
-            _orderRepository = orderRepository;
+            _orderService = orderService;
             _userManager = userManager;
         }
-
 
         // =====================================================
         // CHECKOUT
         // =====================================================
-
         public async Task<IActionResult> Checkout()
         {
-            var userId =
-                _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
 
+            // استدعاء الـ Service الخاصة بالطلبات لإتمام عملية الشراء
+            var result = await _orderService.CheckoutAsync(userId);
 
-            var order =
-                await _orderRepository
-                    .CreateOrderAsync(userId);
-
-
-            if (order == null)
+            if (!result.Success || result.Order == null)
             {
-                TempData["Error"] =
-                    "Your cart is empty or there is not enough stock.";
-
-                return RedirectToAction(
-                    "Index",
-                    "Cart"
-                );
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Cart");
             }
 
-
-            return View(
-                "CheckoutComplete",
-                order.Id
-            );
+            TempData["Success"] = result.Message;
+            return View("CheckoutComplete", result.Order.Id);
         }
-
 
         // =====================================================
         // MY ORDERS
         // =====================================================
-
         public async Task<IActionResult> MyOrders()
         {
-            var userId =
-                _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
 
-
-            var orders =
-                await _orderRepository
-                    .GetCustomerOrdersAsync(userId);
-
+            var orders = await _orderService.GetCustomerOrdersAsync(userId);
 
             return View(orders);
         }
 
-
         // =====================================================
         // ORDER DETAILS
         // =====================================================
-
         public async Task<IActionResult> Details(int id)
         {
-            var userId =
-                _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
 
-
-            var order =
-                await _orderRepository
-                    .GetOrderByIdAsync(id);
-
+            // استخدام الـ Service للتحقق من الصلاحيات وجلب الطلب بأمان
+            var order = await _orderService.GetOrderByIdAsync(id, userId, isPrivileged: false);
 
             if (order == null)
                 return NotFound();
 
-
-            // Customer can see only
-            // their own order
-
-            if (order.CustomerId != userId)
-                return Forbid();
-
-
             return View(order);
         }
-
 
         // =====================================================
         // CANCEL ORDER
         // =====================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(int id)
         {
-            var userId =
-                _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
 
+            var result = await _orderService.CancelOrderAsync(id, userId);
 
-            var result =
-                await _orderRepository
-                    .CancelOrderAsync(
-                        id,
-                        userId
-                    );
-
-
-            if (!result)
+            if (!result.Success)
             {
-                TempData["Error"] =
-                    "This order cannot be cancelled.";
-
-                return RedirectToAction(
-                    nameof(MyOrders)
-                );
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(MyOrders));
             }
 
-
-            TempData["Success"] =
-                "Order cancelled successfully.";
-
-
-            return RedirectToAction(
-                nameof(MyOrders)
-            );
+            TempData["Success"] = result.Message;
+            return RedirectToAction(nameof(MyOrders));
         }
     }
 }

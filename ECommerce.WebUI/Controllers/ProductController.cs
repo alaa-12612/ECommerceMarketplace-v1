@@ -11,57 +11,38 @@ namespace ECommerce.WebUI.Controllers
     [Authorize(Roles = "Seller,Admin")]
     public class ProductController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ProductController(
-            IProductRepository productRepository,
+            IProductService productService,
             ICategoryRepository categoryRepository,
             UserManager<ApplicationUser> userManager,
             IWebHostEnvironment webHostEnvironment)
         {
-            _productRepository = productRepository;
+            _productService = productService;
             _categoryRepository = categoryRepository;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
 
-        
         // =========================================================
         // INDEX (With Search, Filter & Sort)
         // =========================================================
-
         public async Task<IActionResult> Index(string? searchQuery, int? categoryId, string? sortOrder)
         {
             var userId = _userManager.GetUserId(User);
 
-           
-            var products = await _productRepository.GetProductsBySellerAsync(userId);
+            // الاعتماد بالكامل على الـ Service لتنفيذ الفلترة، البحث، والترتيب
+            var products = await _productService.GetSellerProductsAsync(
+                sellerId: userId!,
+                searchQuery: searchQuery,
+                categoryId: categoryId,
+                sortOrder: sortOrder
+            );
 
-           
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                products = products.Where(p => p.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                                              (p.Description != null && p.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)));
-            }
-
-            
-            if (categoryId.HasValue && categoryId.Value > 0)
-            {
-                products = products.Where(p => p.CategoryId == categoryId.Value);
-            }
-
-            
-            products = sortOrder switch
-            {
-                "price_asc" => products.OrderBy(p => p.Price),
-                "price_desc" => products.OrderByDescending(p => p.Price),
-                _ => products.OrderByDescending(p => p.Id) 
-            };
-
-           
             var categories = await _categoryRepository.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
 
@@ -71,7 +52,6 @@ namespace ECommerce.WebUI.Controllers
         // =========================================================
         // CREATE - GET
         // =========================================================
-
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -89,11 +69,9 @@ namespace ECommerce.WebUI.Controllers
             return View(viewModel);
         }
 
-
         // =========================================================
         // CREATE - POST
         // =========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel model)
@@ -143,23 +121,22 @@ namespace ECommerce.WebUI.Controllers
                 AvailableQuantity = model.AvailableQuantity,
                 CategoryId = model.CategoryId,
                 ImageUrl = uniqueFileName,
-                SellerId = _userManager.GetUserId(User)
+                SellerId = _userManager.GetUserId(User)!
             };
 
-            await _productRepository.AddAsync(product);
+            // استدعاء الـ Service لحفظ المنتج
+            await _productService.AddProductAsync(product);
 
             return RedirectToAction(nameof(Index));
         }
 
-
         // =========================================================
         // EDIT - GET
         // =========================================================
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -198,11 +175,9 @@ namespace ECommerce.WebUI.Controllers
             return View(viewModel);
         }
 
-
         // =========================================================
         // EDIT - POST
         // =========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductViewModel model)
@@ -212,7 +187,7 @@ namespace ECommerce.WebUI.Controllers
                 return BadRequest();
             }
 
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -289,20 +264,19 @@ namespace ECommerce.WebUI.Controllers
             product.CategoryId = model.CategoryId;
             product.ImageUrl = imageFileName;
 
-            await _productRepository.UpdateAsync(product);
+            // استدعاء الـ Service للتحديث
+            await _productService.UpdateProductAsync(product);
 
             return RedirectToAction(nameof(Index));
         }
 
-
         // =========================================================
         // DELETE - GET
         // =========================================================
-
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -319,16 +293,14 @@ namespace ECommerce.WebUI.Controllers
             return View(product);
         }
 
-
         // =========================================================
         // DELETE - POST
         // =========================================================
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -358,16 +330,15 @@ namespace ECommerce.WebUI.Controllers
                 }
             }
 
-            await _productRepository.DeleteAsync(id);
+            // استدعاء الـ Service للحذف
+            await _productService.DeleteProductAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
 
-
         // =========================================================
         // LOAD CATEGORIES
         // =========================================================
-
         private async Task LoadCategories(ProductViewModel model)
         {
             var categories = await _categoryRepository.GetAllAsync();
