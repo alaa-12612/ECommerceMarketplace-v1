@@ -27,7 +27,7 @@ namespace ECommerce.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            // منع مسح التقييمات تلقائياً لو المنتج اتمسح عشان نتجنب خطأ Cascade Paths
+           
             builder.Entity<Review>()
                 .HasOne(r => r.Product)
                 .WithMany()
@@ -35,14 +35,14 @@ namespace ECommerce.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            // منع مسح الرغبات تلقائياً لو المنتج اتمسح عشان نتجنب خطأ Cascade Paths
+           
             builder.Entity<WishlistItem>()
                 .HasOne(w => w.Product)
                 .WithMany()
                 .HasForeignKey(w => w.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // منع الحذف التلقائي للطلبات وعربة التسوق عند حذف منتج
+          
             builder.Entity<OrderItem>()
                 .HasOne(o => o.Product)
                 .WithMany()

@@ -6,7 +6,7 @@ namespace ECommerce.Application.Interfaces
 {
     public interface IOrderRepository
     {
-        // دالة تحويل العربة إلى طلب
+        
         Task<Order> CreateOrderAsync(string customerId);
 
         Task<IEnumerable<Order>> GetCustomerOrdersAsync(string customerId);

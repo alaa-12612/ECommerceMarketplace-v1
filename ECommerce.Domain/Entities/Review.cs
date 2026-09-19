@@ -16,9 +16,9 @@ namespace ECommerce.Domain.Entities
         public Product Product { get; set; }
 
         [Range(1, 5)]
-        public int Rating { get; set; } // التقييم من 1 لـ 5
+        public int Rating { get; set; } 
 
-        public string Comment { get; set; } // تعليق العميل
+        public string Comment { get; set; } 
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

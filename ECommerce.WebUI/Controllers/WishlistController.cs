@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.WebUI.Controllers
 {
-    [Authorize] // يجب أن يكون مسجلاً للدخول لاستخدام القائمة
+    [Authorize] 
     public class WishlistController : Controller
     {
         private readonly IWishlistRepository _wishlistRepository;
@@ -18,7 +18,7 @@ namespace ECommerce.WebUI.Controllers
             _userManager = userManager;
         }
 
-        // عرض منتجات قائمة الرغبات للعميل الحالي
+       
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
@@ -26,16 +26,16 @@ namespace ECommerce.WebUI.Controllers
             return View(wishlist);
         }
 
-        // إضافة منتج لقائمة الرغبات
+       
         [HttpPost]
         public async Task<IActionResult> AddToWishlist(int productId)
         {
             var userId = _userManager.GetUserId(User);
             await _wishlistRepository.AddToWishlistAsync(userId, productId);
-            return RedirectToAction("Index", "Home"); // العودة للرئيسية بعد الإضافة
+            return RedirectToAction("Index", "Home"); 
         }
 
-        // إزالة منتج من القائمة
+       
         [HttpPost]
         public async Task<IActionResult> RemoveFromWishlist(int id)
         {

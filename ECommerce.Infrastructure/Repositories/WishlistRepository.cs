@@ -28,7 +28,7 @@ namespace ECommerce.Infrastructure.Repositories
 
         public async Task AddToWishlistAsync(string userId, int productId)
         {
-            // التأكد من أن المنتج ليس موجوداً بالفعل في القائمة
+            
             if (!await IsProductInWishlistAsync(userId, productId))
             {
                 var item = new WishlistItem { CustomerId = userId, ProductId = productId };

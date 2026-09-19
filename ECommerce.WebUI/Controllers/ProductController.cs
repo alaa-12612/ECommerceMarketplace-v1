@@ -37,31 +37,31 @@ namespace ECommerce.WebUI.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
-            // جلب منتجات التاجر أساساً
+           
             var products = await _productRepository.GetProductsBySellerAsync(userId);
 
-            // 1. فلترة بالبحث النصي (لو المستخدم كتب حاجة)
+           
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
                 products = products.Where(p => p.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
                                               (p.Description != null && p.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)));
             }
 
-            // 2. فلترة بالـ Category
+            
             if (categoryId.HasValue && categoryId.Value > 0)
             {
                 products = products.Where(p => p.CategoryId == categoryId.Value);
             }
 
-            // 3. الترتيب (Sorting)
+            
             products = sortOrder switch
             {
                 "price_asc" => products.OrderBy(p => p.Price),
                 "price_desc" => products.OrderByDescending(p => p.Price),
-                _ => products.OrderByDescending(p => p.Id) // الترتيب الافتراضي (الأحدث أولاً)
+                _ => products.OrderByDescending(p => p.Id) 
             };
 
-            // تجهيز قائمة الـ Categories عشان تظهر في الـ Dropdown بتاعت الفلتر فوق
+           
             var categories = await _categoryRepository.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
 

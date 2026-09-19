@@ -76,7 +76,7 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // استدعاء دالة الـ Seed الشاملة والموحدة
+       
         await DbInitializer.SeedAsync(services);
     }
     catch (Exception ex)
@@ -100,7 +100,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets(); // للـ .NET 9 (أو استبدلي بـ UseStaticFiles() للنسخ الأقدم)
+app.MapStaticAssets(); 
 
 app.MapControllerRoute(
     name: "default",

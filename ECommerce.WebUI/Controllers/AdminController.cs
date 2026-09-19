@@ -28,7 +28,7 @@ namespace ECommerce.WebUI.Controllers
             _cartRepository = cartRepository;
         }
 
-        // لوحة التحكم الرئيسية للمدير
+       
         public async Task<IActionResult> Index()
         {
             var customers = await _userManager.GetUsersInRoleAsync("Customer");
@@ -52,7 +52,7 @@ namespace ECommerce.WebUI.Controllers
 
    
 
-        // --- إدارة طلبات البائعين ---
+       
         public async Task<IActionResult> SellerRequests()
         {
             var requests = await _userManager.Users
@@ -79,10 +79,10 @@ namespace ECommerce.WebUI.Controllers
 
                 await _userManager.AddToRoleAsync(user, "Seller");
 
-                // ✅ إجبار Identity على إبطال الكوكي القديمة وتحديث صلاحيات المستخدم فوراً
+               
                 await _userManager.UpdateSecurityStampAsync(user);
 
-                // تفريغ سلة التسوق
+               
                 await _cartRepository.ClearCartAsync(user.Id);
             }
             return RedirectToAction(nameof(SellerRequests));
@@ -100,7 +100,7 @@ namespace ECommerce.WebUI.Controllers
             return RedirectToAction(nameof(SellerRequests));
         }
 
-        // --- إدارة الطلبات ---
+      
         public async Task<IActionResult> ManageOrders()
         {
             var orders = await _orderRepository.GetAllOrdersAsync();
@@ -117,48 +117,47 @@ namespace ECommerce.WebUI.Controllers
             return RedirectToAction(nameof(ManageOrders));
         }
 
-        // عرض كافة المستخدمين
+       
         public async Task<IActionResult> Users()
         {
             var users = await _userManager.Users.ToListAsync();
             return View(users);
         }
 
-        // حظر / تعطيل حساب مستخدم
+        
         [HttpPost]
         public async Task<IActionResult> SuspendUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                // حظر الحساب لمدة 100 سنة على سبيل المثال
+                
                 await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddYears(100));
             }
             return RedirectToAction(nameof(Users));
         }
 
-        // إلغاء الحظر / تفعيل حساب مستخدم
+        
         [HttpPost]
         public async Task<IActionResult> ActivateUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                // إزالة الحظر فوراً
+                
                 await _userManager.SetLockoutEndDateAsync(user, null);
             }
             return RedirectToAction(nameof(Users));
         }
 
 
-        // --- إدارة كافة منتجات المتجر (Task 9) ---
         public async Task<IActionResult> Products()
         {
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
 
-        // حذف / حجب منتج مخالف
+       
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
@@ -167,7 +166,7 @@ namespace ECommerce.WebUI.Controllers
             return RedirectToAction(nameof(Products));
         }
 
-        // عرض تفاصيل طلب محدد
+       
         public async Task<IActionResult> OrderDetails(int id)
         {
             var order = await _orderRepository.GetOrderByIdAsync(id);
