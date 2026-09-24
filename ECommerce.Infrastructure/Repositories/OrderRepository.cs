@@ -145,8 +145,6 @@ namespace ECommerce.Infrastructure.Repositories
 
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
-
-
         // =====================================================
         // ADMIN UPDATE STATUS
         // =====================================================
@@ -286,8 +284,7 @@ namespace ECommerce.Infrastructure.Repositories
         // =====================================================
         // SELLER UPDATE ORDER STATUS
         // =====================================================
-
-        public async Task<bool> UpdateSellerOrderStatusAsync(
+     public async Task<bool> UpdateSellerOrderStatusAsync(
             int orderId,
             string sellerId,
             OrderStatus status)
@@ -362,3 +359,7 @@ namespace ECommerce.Infrastructure.Repositories
         }
     }
 }
+
+
+
+
