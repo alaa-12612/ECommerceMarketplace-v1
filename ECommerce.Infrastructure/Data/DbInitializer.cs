@@ -83,7 +83,7 @@ namespace ECommerce.Infrastructure.Data
                 }
             }
 
-            // 4. Seed Categories (Updated "Supermarket" to "Food")
+            // 4. Seed Categories 
             var categoryNames = new[]
             {
                 "Electronics",
@@ -112,7 +112,7 @@ namespace ECommerce.Infrastructure.Data
             var categories = await context.Categories
                 .ToDictionaryAsync(c => c.Name, c => c.Id, StringComparer.OrdinalIgnoreCase);
 
-            // 5. Seed Products (All 40 Products)
+            // 5. Seed Products 
             if (!await context.Products.AnyAsync() && seller != null)
             {
                 var products = new List<Product>

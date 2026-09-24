@@ -16,6 +16,8 @@ namespace ECommerce.Application.Services
             _productRepository = productRepository;
         }
 
+        // Fetches all products, filters them by search query and category if provided, 
+        // sorts them based on the sortOrder parameter, and returns the result.
         public async Task<IEnumerable<Product>> GetCatalogProductsAsync(
             string? searchQuery,
             int? categoryId,

@@ -17,12 +17,13 @@ namespace ECommerce.Application.Services
             _cartRepository = cartRepository;
             _productRepository = productRepository;
         }
-
+        //GetCart
         public async Task<Cart> GetCartAsync(string customerId)
         {
             return await _cartRepository.GetCartByCustomerIdAsync(customerId);
         }
 
+        // AddToCart
         public async Task<(bool Success, string Message)> AddToCartAsync(
             string customerId,
             int productId,
@@ -54,6 +55,7 @@ namespace ECommerce.Application.Services
             return (true, "Product added to cart successfully.");
         }
 
+        //UpdateQuantity
         public async Task<(bool Success, string Message)> UpdateQuantityAsync(int cartItemId, int newQuantity)
         {
             if (newQuantity <= 0)
@@ -66,16 +68,19 @@ namespace ECommerce.Application.Services
             return (true, "Quantity updated successfully.");
         }
 
+        //RemoveFromCart
         public async Task RemoveFromCartAsync(int cartItemId)
         {
             await _cartRepository.RemoveItemFromCartAsync(cartItemId);
         }
 
+        //ClearCart
         public async Task ClearCartAsync(string customerId)
         {
             await _cartRepository.ClearCartAsync(customerId);
         }
 
+        //GetCartTotal
         public async Task<decimal> GetCartTotalAsync(string customerId)
         {
             var cart = await _cartRepository.GetCartByCustomerIdAsync(customerId);

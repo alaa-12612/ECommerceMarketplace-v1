@@ -19,6 +19,7 @@ namespace ECommerce.Application.Interfaces
 
         Task<bool> CancelOrderAsync(int orderId, string customerId);
 
+        //for (Multi-vendor)
         Task<IEnumerable<Order>> GetSellerOrdersAsync(string sellerId);
 
         Task<bool> UpdateSellerOrderStatusAsync(

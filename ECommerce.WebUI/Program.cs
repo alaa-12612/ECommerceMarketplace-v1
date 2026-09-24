@@ -87,7 +87,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // =========================================================
-// 6. DATABASE SEEDING (BEST PRACTICE)
+// 6. DATABASE SEEDING 
 // =========================================================
 using (var scope = app.Services.CreateScope())
 {
