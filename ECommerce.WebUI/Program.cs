@@ -5,17 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =========================================================
 // 1. DATABASE CONFIGURATION
-// =========================================================
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-// =========================================================
 // 2. DEPENDENCY INJECTION (REPOSITORIES & SERVICES)
-// =========================================================
+
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.ICategoryRepository,
     ECommerce.Infrastructure.Repositories.CategoryRepository>();

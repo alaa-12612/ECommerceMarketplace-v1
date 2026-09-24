@@ -69,7 +69,9 @@ namespace ECommerce.Infrastructure.Repositories
             };
 
 
-            // Decrease stock
+            // =================================================
+            // DECREASE STOCK
+            // =================================================
 
             foreach (var item in cart.Items)
             {
@@ -154,12 +156,42 @@ namespace ECommerce.Infrastructure.Repositories
             OrderStatus status)
         {
             var order = await _context.Orders
+                .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
+
 
             if (order == null)
                 return;
 
+
+            // =================================================
+            // IF ORDER IS BEING CANCELLED
+            // RETURN STOCK
+            // =================================================
+
+            if (status == OrderStatus.Cancelled &&
+                order.Status != OrderStatus.Cancelled)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    // Get the product directly from database
+                    var product = await _context.Products
+                        .FirstOrDefaultAsync(
+                            p => p.Id == orderItem.ProductId
+                        );
+
+                    if (product != null)
+                    {
+                        product.AvailableQuantity += orderItem.Quantity;
+                    }
+                }
+            }
+
+
+            // Update order status
+
             order.Status = status;
+
 
             await _context.SaveChangesAsync();
         }
@@ -176,8 +208,6 @@ namespace ECommerce.Infrastructure.Repositories
             var order = await _context.Orders
 
                 .Include(o => o.OrderItems)
-
-                .ThenInclude(i => i.Product)
 
                 .FirstOrDefaultAsync(
                     o => o.Id == orderId &&
@@ -199,13 +229,20 @@ namespace ECommerce.Infrastructure.Repositories
             }
 
 
-            // Return products to stock
+            // =================================================
+            // RETURN PRODUCTS TO STOCK
+            // =================================================
 
-            foreach (var item in order.OrderItems)
+            foreach (var orderItem in order.OrderItems)
             {
-                if (item.Product != null)
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(
+                        p => p.Id == orderItem.ProductId
+                    );
+
+                if (product != null)
                 {
-                    item.Product.AvailableQuantity += item.Quantity;
+                    product.AvailableQuantity += orderItem.Quantity;
                 }
             }
 
@@ -259,8 +296,6 @@ namespace ECommerce.Infrastructure.Repositories
 
                 .Include(o => o.OrderItems)
 
-                .ThenInclude(i => i.Product)
-
                 .FirstOrDefaultAsync(
                     o => o.Id == orderId
                 );
@@ -273,15 +308,49 @@ namespace ECommerce.Infrastructure.Repositories
             // Make sure this order contains
             // at least one product belonging to this seller
 
-            bool belongsToSeller =
-                order.OrderItems.Any(
-                    i => i.Product != null &&
-                         i.Product.SellerId == sellerId
-                );
+            var belongsToSeller = false;
+
+            foreach (var item in order.OrderItems)
+            {
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(
+                        p => p.Id == item.ProductId
+                    );
+
+                if (product != null &&
+                    product.SellerId == sellerId)
+                {
+                    belongsToSeller = true;
+                    break;
+                }
+            }
 
 
             if (!belongsToSeller)
                 return false;
+
+
+            // =================================================
+            // IF SELLER CANCELS THE ORDER
+            // RETURN STOCK
+            // =================================================
+
+            if (status == OrderStatus.Cancelled &&
+                order.Status != OrderStatus.Cancelled)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var product = await _context.Products
+                        .FirstOrDefaultAsync(
+                            p => p.Id == orderItem.ProductId
+                        );
+
+                    if (product != null)
+                    {
+                        product.AvailableQuantity += orderItem.Quantity;
+                    }
+                }
+            }
 
 
             order.Status = status;
