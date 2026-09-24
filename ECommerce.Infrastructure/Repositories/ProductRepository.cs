@@ -20,7 +20,6 @@ namespace ECommerce.Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            // تم إضافة Include(p => p.Seller) لجلب بيانات البائع
             return await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Seller)

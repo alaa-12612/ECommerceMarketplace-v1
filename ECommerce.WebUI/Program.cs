@@ -18,26 +18,47 @@ builder.Services.AddScoped<
     ECommerce.Application.Interfaces.ICategoryRepository,
     ECommerce.Infrastructure.Repositories.CategoryRepository>();
 
+// --- Product ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.IProductRepository,
     ECommerce.Infrastructure.Repositories.ProductRepository>();
+builder.Services.AddScoped<
+    ECommerce.Application.Interfaces.IProductService,
+    ECommerce.Application.Services.ProductService>();
 
+// --- Cart ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.ICartRepository,
     ECommerce.Infrastructure.Repositories.CartRepository>();
+builder.Services.AddScoped<
+    ECommerce.Application.Interfaces.ICartService,
+    ECommerce.Application.Services.CartService>();
 
+// --- Order ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.IOrderRepository,
     ECommerce.Infrastructure.Repositories.OrderRepository>();
+builder.Services.AddScoped<
+    ECommerce.Application.Interfaces.IOrderService,
+    ECommerce.Application.Services.OrderService>();
 
+// --- Wishlist ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.IWishlistRepository,
     ECommerce.Infrastructure.Repositories.WishlistRepository>();
+builder.Services.AddScoped<
+    ECommerce.Application.Interfaces.IWishlistService,
+    ECommerce.Application.Services.WishlistService>();
 
+// --- Review ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.IReviewRepository,
     ECommerce.Infrastructure.Repositories.ReviewRepository>();
+builder.Services.AddScoped<
+    ECommerce.Application.Interfaces.IReviewService,
+    ECommerce.Application.Services.ReviewService>();
 
+// --- AI Assistant ---
 builder.Services.AddScoped<
     ECommerce.Application.Interfaces.IAiAssistantService,
     ECommerce.Infrastructure.Services.AiAssistantService>();
@@ -74,7 +95,6 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // استدعاء دالة الـ Seed الشاملة والموحدة
         await DbInitializer.SeedAsync(services);
     }
     catch (Exception ex)
@@ -98,7 +118,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets(); // للـ .NET 9 (أو استبدلي بـ UseStaticFiles() للنسخ الأقدم)
+app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",

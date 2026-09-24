@@ -9,30 +9,25 @@ namespace ECommerce.WebUI.Controllers
     [Authorize(Roles = "Customer")]
     public class CartController : Controller
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartService _cartService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public CartController(
-            ICartRepository cartRepository,
+            ICartService cartService,
             UserManager<ApplicationUser> userManager)
         {
-            _cartRepository = cartRepository;
+            _cartService = cartService;
             _userManager = userManager;
         }
-
 
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
 
-            var cart =
-                await _cartRepository.GetCartByCustomerIdAsync(
-                    userId
-                );
+            var cart = await _cartService.GetCartAsync(userId);
 
             return View(cart);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -40,39 +35,22 @@ namespace ECommerce.WebUI.Controllers
             int productId,
             int quantity = 1)
         {
-            if (quantity <= 0)
-            {
-                TempData["Error"] =
-                    "Quantity must be greater than zero.";
+            var userId = _userManager.GetUserId(User);
 
-                return RedirectToAction(
-                    "Index",
-                    "Home"
-                );
+            
+            var result = await _cartService.AddToCartAsync(userId, productId, quantity);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+            }
+            else
+            {
+                TempData["Success"] = result.Message;
             }
 
-
-            var userId =
-                _userManager.GetUserId(User);
-
-
-            await _cartRepository.AddItemToCartAsync(
-                userId,
-                productId,
-                quantity
-            );
-
-
-            TempData["Success"] =
-                "Product added to cart successfully.";
-
-
-            return RedirectToAction(
-                "Index",
-                "Home"
-            );
+            return RedirectToAction("Index", "Home");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -80,44 +58,30 @@ namespace ECommerce.WebUI.Controllers
             int cartItemId,
             int quantity)
         {
-            if (quantity <= 0)
-            {
-                await _cartRepository
-                    .RemoveItemFromCartAsync(cartItemId);
+            var result = await _cartService.UpdateQuantityAsync(cartItemId, quantity);
 
-                return RedirectToAction(
-                    nameof(Index)
-                );
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+            }
+            else
+            {
+                TempData["Success"] = result.Message;
             }
 
-
-            await _cartRepository
-                .UpdateItemQuantityAsync(
-                    cartItemId,
-                    quantity
-                );
-
-
-            return RedirectToAction(
-                nameof(Index)
-            );
+            return RedirectToAction(nameof(Index));
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromCart(
             int cartItemId)
         {
-            await _cartRepository
-                .RemoveItemFromCartAsync(
-                    cartItemId
-                );
+            await _cartService.RemoveFromCartAsync(cartItemId);
 
+            TempData["Success"] = "Item removed from cart successfully.";
 
-            return RedirectToAction(
-                nameof(Index)
-            );
+            return RedirectToAction(nameof(Index));
         }
     }
 }

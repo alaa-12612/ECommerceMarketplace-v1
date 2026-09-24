@@ -8,7 +8,7 @@ namespace ECommerce.Application.Interfaces
     public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetAllAsync();
-        Task<IEnumerable<Product>> GetProductsBySellerAsync(string sellerId); // جلب منتجات بائع معين
+        Task<IEnumerable<Product>> GetProductsBySellerAsync(string sellerId); 
         Task<Product> GetByIdAsync(int id);
         Task AddAsync(Product product);
         Task UpdateAsync(Product product);

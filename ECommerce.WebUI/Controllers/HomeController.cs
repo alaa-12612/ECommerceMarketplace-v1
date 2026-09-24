@@ -10,20 +10,20 @@ namespace ECommerce.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IReviewRepository _reviewRepository;
+        private readonly IReviewService _reviewService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public HomeController(
-            IProductRepository productRepository,
+            IProductService productService,
             ICategoryRepository categoryRepository,
-            IReviewRepository reviewRepository,
+            IReviewService reviewService,
             UserManager<ApplicationUser> userManager)
         {
-            _productRepository = productRepository;
+            _productService = productService;
             _categoryRepository = categoryRepository;
-            _reviewRepository = reviewRepository;
+            _reviewService = reviewService;
             _userManager = userManager;
         }
 
@@ -33,95 +33,30 @@ namespace ECommerce.WebUI.Controllers
         // =====================================================
 
         public async Task<IActionResult> Index(
-            string searchQuery,
+            string? searchQuery,
             int? categoryId,
-            string sortOrder)
+            string? sortOrder)
         {
             // Admin goes to Admin Dashboard
-
             if (User.Identity?.IsAuthenticated == true)
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction(
-                        "Index",
-                        "Admin"
-                    );
+                    return RedirectToAction("Index", "Admin");
                 }
-
 
                 if (User.IsInRole("Seller"))
                 {
-                    return RedirectToAction(
-                        "Index",
-                        "Seller"
-                    );
+                    return RedirectToAction("Index", "Seller");
                 }
             }
 
+            var products = await _productService.GetCatalogProductsAsync(searchQuery, categoryId, sortOrder);
 
-            var products =
-                await _productRepository.GetAllAsync();
+            var categories = await _categoryRepository.GetAllAsync();
 
-
-            // Search
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                products = products.Where(
-                    p =>
-                        p.Name.Contains(
-                            searchQuery,
-                            StringComparison.OrdinalIgnoreCase
-                        )
-                        ||
-                        p.Description.Contains(
-                            searchQuery,
-                            StringComparison.OrdinalIgnoreCase
-                        )
-                );
-            }
-
-
-            // Category filter
-
-            if (categoryId.HasValue)
-            {
-                products = products.Where(
-                    p => p.CategoryId == categoryId.Value
-                );
-            }
-
-
-            // Sort by price
-
-            products = sortOrder switch
-            {
-                "price_asc" =>
-                    products.OrderBy(p => p.Price),
-
-                "price_desc" =>
-                    products.OrderByDescending(p => p.Price),
-
-                _ =>
-                    products
-            };
-
-
-            var categories =
-                await _categoryRepository.GetAllAsync();
-
-
-            ViewBag.Categories =
-                new SelectList(
-                    categories,
-                    "Id",
-                    "Name"
-                );
-
-
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
             ViewBag.SortOrder = sortOrder;
-
 
             return View(products);
         }
@@ -133,61 +68,28 @@ namespace ECommerce.WebUI.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var product =
-                await _productRepository.GetByIdAsync(id);
-
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
                 return NotFound();
 
-
-            var reviews =
-                await _reviewRepository
-                    .GetProductReviewsAsync(id);
-
+            var reviews = await _reviewService.GetProductReviewsAsync(id);
 
             bool canReview = false;
-
 
             if (User.Identity?.IsAuthenticated == true &&
                 User.IsInRole("Customer"))
             {
-                var userId =
-                    _userManager.GetUserId(User);
-
-
-                bool hasPurchased =
-                    await _reviewRepository
-                        .HasUserPurchasedProductAsync(
-                            userId,
-                            id
-                        );
-
-
-                bool hasReviewed =
-                    await _reviewRepository
-                        .HasUserReviewedProductAsync(
-                            userId,
-                            id
-                        );
-
-
-                canReview =
-                    hasPurchased &&
-                    !hasReviewed;
+                var userId = _userManager.GetUserId(User);
+                canReview = await _reviewService.CanUserReviewProductAsync(userId, id);
             }
 
-
-            var viewModel =
-                new ProductDetailsViewModel
-                {
-                    Product = product,
-
-                    Reviews = reviews,
-
-                    CanReview = canReview
-                };
-
+            var viewModel = new ProductDetailsViewModel
+            {
+                Product = product,
+                Reviews = reviews,
+                CanReview = canReview
+            };
 
             return View(viewModel);
         }

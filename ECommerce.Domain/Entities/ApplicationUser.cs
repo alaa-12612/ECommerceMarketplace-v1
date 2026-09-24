@@ -11,7 +11,6 @@ namespace ECommerce.Domain.Entities
 
         public bool IsApprovedSeller { get; set; }
 
-        // الخاصية الجديدة لمعرفة إذا كان المستخدم قد طلب أن يكون بائعاً
         public bool HasRequestedToBecomeSeller { get; set; }
     }
 }

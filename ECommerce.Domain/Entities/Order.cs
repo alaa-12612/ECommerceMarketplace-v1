@@ -27,6 +27,6 @@ namespace ECommerce.Domain.Entities
         public Product Product { get; set; }
 
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; } // نحفظ السعر وقت الشراء
+        public decimal UnitPrice { get; set; }
     }
 }

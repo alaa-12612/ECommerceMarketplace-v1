@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.WebUI.Controllers
 {
-    // حماية المتحكم بحيث لا يدخله سوى المدير[cite: 1]
+    
     [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
@@ -16,21 +16,21 @@ namespace ECommerce.WebUI.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        // عرض كل الأقسام[cite: 1]
+        
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryRepository.GetAllAsync();
             return View(categories);
         }
 
-        // شاشة إضافة قسم جديد (GET)[cite: 1]
+        
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // حفظ القسم الجديد في قاعدة البيانات (POST)
+       
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {
@@ -42,7 +42,7 @@ namespace ECommerce.WebUI.Controllers
             return View(category);
         }
 
-        // --- شاشة التعديل (GET) ---
+       
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -52,7 +52,7 @@ namespace ECommerce.WebUI.Controllers
             return View(category);
         }
 
-        // --- حفظ التعديلات (POST) ---
+       
         [HttpPost]
         public async Task<IActionResult> Edit(Category category)
         {
@@ -64,7 +64,7 @@ namespace ECommerce.WebUI.Controllers
             return View(category);
         }
 
-        // --- شاشة تأكيد الحذف (GET) ---
+        
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -74,7 +74,7 @@ namespace ECommerce.WebUI.Controllers
             return View(category);
         }
 
-        // --- تنفيذ الحذف (POST) ---
+        
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

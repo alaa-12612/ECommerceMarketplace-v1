@@ -9,17 +9,16 @@ namespace ECommerce.WebUI.Controllers
     [Authorize(Roles = "Customer")]
     public class ReviewController : Controller
     {
-        private readonly IReviewRepository _reviewRepository;
+        private readonly IReviewService _reviewService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ReviewController(
-            IReviewRepository reviewRepository,
+            IReviewService reviewService,
             UserManager<ApplicationUser> userManager)
         {
-            _reviewRepository = reviewRepository;
+            _reviewService = reviewService;
             _userManager = userManager;
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -28,103 +27,19 @@ namespace ECommerce.WebUI.Controllers
             int rating,
             string comment)
         {
-            var userId =
-                _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
 
+            
+            var result = await _reviewService.AddReviewAsync(userId, productId, rating, comment);
 
-            if (rating < 1 || rating > 5)
+            if (!result.Success)
             {
-                TempData["Error"] =
-                    "Rating must be between 1 and 5.";
-
-                return RedirectToAction(
-                    "Details",
-                    "Home",
-                    new { id = productId }
-                );
+                TempData["Error"] = result.Message;
             }
-
-
-            if (string.IsNullOrWhiteSpace(comment))
+            else
             {
-                TempData["Error"] =
-                    "Please write a comment.";
-
-                return RedirectToAction(
-                    "Details",
-                    "Home",
-                    new { id = productId }
-                );
+                TempData["Success"] = result.Message;
             }
-
-
-            // Check if customer purchased the product
-
-            bool hasPurchased =
-                await _reviewRepository
-                    .HasUserPurchasedProductAsync(
-                        userId,
-                        productId
-                    );
-
-
-            if (!hasPurchased)
-            {
-                TempData["Error"] =
-                    "You can review only products you purchased.";
-
-                return RedirectToAction(
-                    "Details",
-                    "Home",
-                    new { id = productId }
-                );
-            }
-
-
-            // Prevent duplicate reviews
-
-            bool hasReviewed =
-                await _reviewRepository
-                    .HasUserReviewedProductAsync(
-                        userId,
-                        productId
-                    );
-
-
-            if (hasReviewed)
-            {
-                TempData["Error"] =
-                    "You have already reviewed this product.";
-
-                return RedirectToAction(
-                    "Details",
-                    "Home",
-                    new { id = productId }
-                );
-            }
-
-
-            var review = new Review
-            {
-                ProductId = productId,
-
-                CustomerId = userId,
-
-                Rating = rating,
-
-                Comment = comment,
-
-                CreatedAt = DateTime.Now
-            };
-
-
-            await _reviewRepository
-                .AddReviewAsync(review);
-
-
-            TempData["Success"] =
-                "Your review was added successfully.";
-
 
             return RedirectToAction(
                 "Details",
